@@ -97,7 +97,7 @@ task :release => :build do
   sh "git tag v#{version}"
   sh "git push origin master"
   sh "git push origin v#{version}"
-#  sh "gem push pkg/#{name}-#{version}.gem"
+  sh "gem push pkg/#{name}-#{version}.gem"
 end
 
 desc "Build #{gem_file} into the pkg directory"
@@ -118,7 +118,7 @@ task :gemspec => :validate do
   replace_header(head, :version)
   replace_header(head, :date)
   #comment this out if your rubyforge_project has a different name
-  #replace_header(head, :rubyforge_project)
+  replace_header(head, :rubyforge_project)
 
   # determine file list from git ls-files
   files = `git ls-files`.

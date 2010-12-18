@@ -9,21 +9,20 @@ Gem::Specification.new do |s|
   ## the sub! line in the Rakefile
   s.name              = 'remote_syslog'
   s.version           = '0.1.0'
-  s.date              = '2010-12-05'
-  #s.rubyforge_project = 'NAME'
-  s.rubyforge_project = '[none]'
+  s.date              = '2010-12-17'
+  s.rubyforge_project = 'remote_syslog'
 
   ## Make sure your summary is short. The description may be as long
   ## as you like.
-  s.summary     = 'Monitor flat file log(s) for new entries and send to remote syslog'
-  s.description = 'Monitor flat file log(s) for new entries and send to remote syslog'
+  s.summary     = 'Monitor plain text log file(s) for new entries and send to remote syslog collector'
+  s.description = "Lightweight daemon to tail one or more log files and transmit UDP syslog messages to a remote syslog host (centralized log aggregation). Generates UDP packets itself instead of depending on a system syslog daemon, so it doesn't affect system-wide logging configuration."
 
   ## List the primary authors. If there are a bunch of authors, it's probably
   ## better to set the email to an email list or something. If you don't have
   ## a custom homepage, consider using your GitHub URL or the like.
-  s.authors  = ['Seven Scale']
+  s.authors  = ['Papertrail']
   s.email    = 'troy@sevenscale.com'
-  s.homepage = 'http://papertrailapp.com/'
+  s.homepage = 'http://github.com/papertrail/remote_syslog'
   
   ## This gets added to the $LOAD_PATH so that 'lib/NAME.rb' can be required as
   ## require 'NAME.rb' or'/lib/NAME/file.rb' can be as require 'NAME/file.rb'
