@@ -51,6 +51,9 @@ def remote_syslog_daemon(args)
     opts.on("-f", "--facility FACILITY", "Facility (user)") do |v|
       options[:facility] = v.upcase
     end
+    opts.on("-m", "--multiline", "Multiline events; handle lines starting with whitespace as part of lass event (false)") do
+      options[:multiline] = true
+    end
     opts.on("-p", "--dest-port PORT", "Destination syslog port (514)") do |v|
       options[:dest_port] = v
     end

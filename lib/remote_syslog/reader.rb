@@ -9,6 +9,9 @@ module RemoteSyslog
       @hostname = options[:hostname] || `hostname`.strip
       @hostname = 'localhost' unless @hostname && @hostname != ''
       
+      @multiline = options[:multiline] || false
+      @queued_lines = []
+  
       if options[:severity]
         @severity = severity_value(options[:severity]) || raise(ArgumentError, "Invalid severity: #{options[:severity]} (valid: #{severities.keys.join(', ')})")
       else
@@ -27,8 +30,20 @@ module RemoteSyslog
   
     def receive_data(data)
       @buffer.extract(data).each do |line|
-        transmit(line)
+        if !@multiline
+          transmit(line)
+        elsif line[0..0] == ' '
+          @queued_lines << line
+        else
+          send_queued_lines unless @queued_lines.empty?
+          @queued_lines << line
+        end
       end
+    end
+    
+    def send_queued_lines
+      transmit(@queued_lines.join("\n"))
+      @queued_lines = []
     end
 
     def transmit(message)
