@@ -24,7 +24,7 @@ transmitting to any syslog server.
 
 Install the gem, which includes a binary called "remote_syslog":
 
-    gem install remote_syslog
+    $ [sudo] gem install remote_syslog
 
 Optionally, create a log_files.yml with the log file paths to read and the 
 host/port to log to (see examples/log_files.yml.example). These can also be 
