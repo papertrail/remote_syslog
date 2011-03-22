@@ -1,5 +1,5 @@
 module RemoteSyslog
- VERSION = "0.1.0"
+ VERSION = "1.0.0"
 end
 
 require 'remote_syslog/levels'
