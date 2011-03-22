@@ -66,6 +66,8 @@ remote_syslog.init.d. You may be able to:
 
 ## Configuration
 
+By default, the gem looks for a configuration in /etc/log_files.yml.
+
 The gem comes with a sample config.  Optionally:
 
     cp examples/log_files.yml.example /etc/log_files.yml
@@ -75,6 +77,10 @@ to log to (as a hash).  Only 1 destination server is supported; the command-line
 argument wins.  Filenames given on the command line are additive to those 
 in the config file.
 
+    files: [/var/log/httpd/access_log, /var/log/httpd/error_log, /var/log/mysqld.log, /var/run/mysqld/mysqld-slow.log]
+    destination:
+      host: logs.papertrailapp.com
+      port: 12345
 
 ## Contribute
 
