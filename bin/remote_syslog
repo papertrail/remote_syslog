@@ -88,13 +88,7 @@ def remote_syslog_daemon(args)
   end
 
   # handle relative paths before Daemonize changes the wd to / and expand wildcards
-  files.map! { |f| File.expand_path(f) }.delete_if { |f|
-    if f.include? '*'
-      Dir.glob(f) { |e| files.push e; }
-      true
-    end
-  }
-  files.uniq!
+  files = files.map { |f| Dir.glob(f) }.flatten.map { |f| File.expand_path(f) }.uniq
 
   Daemons.run_proc(daemonize_options[:app_name], daemonize_options) do
     EventMachine.run do
