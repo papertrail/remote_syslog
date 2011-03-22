@@ -53,15 +53,15 @@ specified as arguments to the remote_syslog daemon. More below.
 
 Daemonize, collecting from files mentioned in ./config/logs.yml as well as
 /var/log/mysqld.log:
-    remote_syslog -c configs/logs.yml -p 12345 /var/log/mysqld.log
+    $ remote_syslog -c configs/logs.yml -p 12345 /var/log/mysqld.log
 
 Stay attached to the terminal, look for and use /etc/log_files.yml if it exists, 
 write PID to /tmp/remote_syslog.pid, and send with facility local0:
-    remote_syslog -d a.server.com -f local0 -P /tmp /var/log/mysqld.log
+    $ remote_syslog -d a.server.com -f local0 -P /tmp /var/log/mysqld.log
 
 remote_syslog will daemonize by default. A sample init file is in the gem as 
 remote_syslog.init.d. You may be able to:
-    cp examples/remote_syslog.init.d /etc/init.d/remote_syslog
+    $ cp examples/remote_syslog.init.d /etc/init.d/remote_syslog
 
 
 ## Configuration
@@ -70,7 +70,7 @@ By default, the gem looks for a configuration in /etc/log_files.yml.
 
 The gem comes with a sample config.  Optionally:
 
-    cp examples/log_files.yml.example /etc/log_files.yml
+    $ cp examples/log_files.yml.example /etc/log_files.yml
     
 log_files.yml has filenames to log from (as an array) and hostname and port 
 to log to (as a hash).  Only 1 destination server is supported; the command-line
@@ -82,21 +82,25 @@ in the config file.
       host: logs.papertrailapp.com
       port: 12345
 
-## Contribute
 
-Bug report:
+## Reporting bugs
 
-1. See whether the issue has already been reported:
-   http://github.com/papertrail/remote_syslog/issues/
+
+1. See whether the issue has already been reported: <https://github.com/papertrail/remote_syslog/issues/>
 2. If you don't find one, create an issue with a repro case.
 
-Enhancement or fix:
 
-1. Fork the project:
-   http://github.com/papertrail/remote_syslog
-2. Make your changes with tests.
-3. Commit the changes without changing the Rakefile or other files unrelated 
-to your enhancement.
-4. Send a pull request.
+## Contributing
 
+Once you've made your great commits:
+
+1. [Fork][fk] remote_syslog
+2. Create a topic branch - `git checkout -b my_branch`
+3. Commit the changes without changing the Rakefile or other files unrelated to your enhancement.
+4. Push to your branch - `git push origin my_branch`
+5. Create a Pull Request or an [Issue][is] with a link to your branch
+6. That's it!
+
+[fk]: http://help.github.com/forking/
+[is]: https://github.com/papertrail/remote_syslog/issues/
 [Papertrail]: http://papertrailapp.com/
