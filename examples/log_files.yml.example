@@ -1,4 +1,4 @@
-files: [/var/log/httpd/access_log, /var/log/httpd/error_log, /var/log/mysqld.log, /var/run/mysqld/mysqld-slow.log]
+files: [/var/log/httpd/access_log, /var/log/httpd/error_log, /opt/misc/*, /var/log/mysqld.log, /var/run/mysqld/mysqld-slow.log]
 destination:
   host: logs.papertrailapp.com
   port: 12345   # optional, defaults to 514

@@ -55,8 +55,8 @@ Daemonize, collecting from files mentioned in ./config/logs.yml as well as
 /var/log/mysqld.log:
     $ remote_syslog -c configs/logs.yml -p 12345 /var/log/mysqld.log
 
-Stay attached to the terminal, look for and use /etc/log_files.yml if it exists, 
-write PID to /tmp/remote_syslog.pid, and send with facility local0:
+Stay attached to the terminal, look for and use /etc/log_files.yml if it 
+exists, write PID to /tmp/remote_syslog.pid, and send with facility local0:
     $ remote_syslog -d a.server.com -f local0 -P /tmp /var/log/mysqld.log
 
 remote_syslog will daemonize by default. A sample init file is in the gem as 
@@ -73,9 +73,11 @@ The gem comes with a sample config.  Optionally:
     $ cp examples/log_files.yml.example /etc/log_files.yml
     
 log_files.yml has filenames to log from (as an array) and hostname and port 
-to log to (as a hash).  Only 1 destination server is supported; the command-line
-argument wins.  Filenames given on the command line are additive to those 
-in the config file.
+to log to (as a hash). Wildcards are supported using * and standard shell 
+globbing. Filenames given on the command line are additive to those in 
+the config file.
+
+Only 1 destination server is supported; the command-line argument wins. 
 
     files: [/var/log/httpd/access_log, /var/log/httpd/error_log, /var/log/mysqld.log, /var/run/mysqld/mysqld-slow.log]
     destination:
