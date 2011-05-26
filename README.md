@@ -46,21 +46,26 @@ specified as arguments to the remote_syslog daemon. More below.
         -p, --dest-port PORT             Destination syslog port (514)
         -P, --pid-dir DIRECTORY          Directory to write .pid file in (/var/run/)
         -s, --severity SEVERITY          Severity (notice)
+            --strip-color                Strip color codes
         -h, --help                       Show this message
+
     
 
 ## Example
 
-Daemonize, collecting from files mentioned in ./config/logs.yml as well as
-/var/log/mysqld.log:
+Daemonize, collecting from files mentioned in `./config/logs.yml` as well as
+`/var/log/mysqld.log`:
+
     $ remote_syslog -c configs/logs.yml -p 12345 /var/log/mysqld.log
 
-Stay attached to the terminal, look for and use /etc/log_files.yml if it 
-exists, write PID to /tmp/remote_syslog.pid, and send with facility local0:
+Stay attached to the terminal, look for and use `/etc/log_files.yml` if it
+exists, write PID to `/tmp/remote_syslog.pid`, and send with facility local0:
+
     $ remote_syslog -d a.server.com -f local0 -P /tmp /var/log/mysqld.log
 
 remote_syslog will daemonize by default. A sample init file is in the gem as 
 remote_syslog.init.d. You may be able to:
+
     $ cp examples/remote_syslog.init.d /etc/init.d/remote_syslog
 
 
@@ -86,7 +91,6 @@ Only 1 destination server is supported; the command-line argument wins.
 
 
 ## Reporting bugs
-
 
 1. See whether the issue has already been reported: <https://github.com/papertrail/remote_syslog/issues/>
 2. If you don't find one, create an issue with a repro case.
