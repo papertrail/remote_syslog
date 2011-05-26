@@ -28,10 +28,6 @@ Gem::Specification.new do |s|
   ## require 'NAME.rb' or'/lib/NAME/file.rb' can be as require 'NAME/file.rb'
   s.require_paths = %w[lib]
 
-  ## This sections is only necessary if you have C extensions.
-  #s.require_paths << 'ext'
-  #s.extensions = %w[ext/extconf.rb]
-
   ## If your gem includes any executables, list them here.
   s.executables = ['remote_syslog']
   s.default_executable = 'remote_syslog'
@@ -47,6 +43,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'daemons'
   s.add_dependency 'eventmachine'
   s.add_dependency 'eventmachine-tail'
+  s.add_dependency 'syslog_protocol'
+  s.add_dependency 'em-resolv-replace'
 
   ## List your development dependencies here. Development dependencies are
   ## those that are only needed during development

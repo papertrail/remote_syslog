@@ -14,18 +14,19 @@ require 'remote_syslog'
 def remote_syslog_daemon(args)
   options = {
     :configfile => '/etc/log_files.yml',
-    :dest_host => 'logs.papertrailapp.com',
-    :dest_port => 514
+    :dest_host  => 'logs.papertrailapp.com',
+    :dest_port  => 514
   }
   daemonize_options = {
-     :app_name   => File.basename($0) || "remote_syslog",
-     :ARGV       => ['start'],
-     :dir_mode   => :system,
-     :multiple   => false,
-     :ontop      => false,
-     :mode       => :exec,
-     :backtrace  => false,
-     :monitor    => false
+    :app_name    => File.basename($0) || "remote_syslog",
+    :ARGV        => ['start'],
+    :dir_mode    => :system,
+    :multiple    => false,
+    :ontop       => false,
+    :mode        => :exec,
+    :backtrace   => false,
+    :monitor     => false,
+    :strip_color => false
   }
 
   op = OptionParser.new do |opts|
@@ -60,6 +61,9 @@ def remote_syslog_daemon(args)
     end
     opts.on("-s", "--severity SEVERITY", "Severity (notice)") do |v|
       options[:severity] = v.upcase
+    end
+    opts.on("--strip-color", "Strip color codes") do
+      options[:strip_color] = true
     end
     opts.on_tail("-h", "--help", "Show this message") do
       puts opts
@@ -97,9 +101,9 @@ def remote_syslog_daemon(args)
       files.each do |path|
         begin
           EventMachine::file_tail(File.expand_path(path), RemoteSyslog::Reader, 
-                                  options[:dest_host], options[:dest_port],
-                                  { :socket => socket, :facility => options[:facility], 
-                                    :severity => options[:severity] })
+            options[:dest_host], options[:dest_port],
+            :socket => socket, :facility => options[:facility],
+            :severity => options[:severity], :strip_color => options[:strip_color])
                                   
         rescue Errno::ENOENT => e
           puts "#{File.expand_path(path)} not found, continuing. (#{e.message})"
