@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   ## the sub! line in the Rakefile
   s.name              = 'remote_syslog'
   s.version           = '1.0.0'
-  s.date              = '2011-03-22'
+  s.date              = '2011-05-25'
   s.rubyforge_project = 'remote_syslog'
 
   ## Make sure your summary is short. The description may be as long
@@ -20,8 +20,8 @@ Gem::Specification.new do |s|
   ## List the primary authors. If there are a bunch of authors, it's probably
   ## better to set the email to an email list or something. If you don't have
   ## a custom homepage, consider using your GitHub URL or the like.
-  s.authors  = ['Papertrail']
-  s.email    = 'troy@sevenscale.com'
+  s.authors  = [ 'Troy Davis', 'Eric Lindvall' ]
+  s.email    = [ 'troy@sevenscale.com', 'eric@sevenscale.com' ]
   s.homepage = 'http://github.com/papertrail/remote_syslog'
   
   ## This gets added to the $LOAD_PATH so that 'lib/NAME.rb' can be required as
@@ -62,6 +62,7 @@ Gem::Specification.new do |s|
     bin/remote_syslog
     examples/log_files.yml.example
     examples/remote_syslog.init.d
+    examples/remote_syslog.supervisor.conf
     lib/remote_syslog.rb
     lib/remote_syslog/levels.rb
     lib/remote_syslog/reader.rb
