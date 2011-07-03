@@ -67,8 +67,6 @@ def remote_syslog_daemon(args)
     end
   end
   
-  op.parse!
-  
   files = ARGV
   if File.exist?(options[:configfile])
     config = open(options[:configfile]) do |f|
@@ -80,12 +78,15 @@ def remote_syslog_daemon(args)
       options[:dest_host] = config['destination']['host'] if config['destination']['host']
       options[:dest_port] = config['destination']['port'] if config['destination']['port']
     end
-  elsif files.empty?
+  end
+  if files.empty?
     puts "No filenames provided and #{options[:configfile]} not found."
     puts ''
     puts op
     exit
   end
+  
+  op.parse!
 
   # handle relative paths before Daemonize changes the wd to / and expand wildcards
   files = files.map { |f| Dir.glob(f) }.flatten.map { |f| File.expand_path(f) }.uniq
