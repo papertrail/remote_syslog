@@ -106,7 +106,8 @@ def remote_syslog_daemon(args)
           EventMachine::file_tail(File.expand_path(path), RemoteSyslog::Reader, 
             options[:dest_host], options[:dest_port],
             :socket => socket, :facility => options[:facility],
-            :severity => options[:severity], :strip_color => options[:strip_color])
+            :severity => options[:severity], :strip_color => options[:strip_color],
+            :hostname => options[:hostname])
                                   
         rescue Errno::ENOENT => e
           puts "#{File.expand_path(path)} not found, continuing. (#{e.message})"
