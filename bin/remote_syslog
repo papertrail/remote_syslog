@@ -84,6 +84,9 @@ def remote_syslog_daemon(args)
       options[:dest_host] = config['destination']['host'] if config['destination']['host']
       options[:dest_port] = config['destination']['port'] if config['destination']['port']
     end
+    if config['hostname']
+      options[:hostname] = config['hostname']
+    end
   elsif files.empty?
     puts "No filenames provided and #{options[:configfile]} not found."
     puts ''
