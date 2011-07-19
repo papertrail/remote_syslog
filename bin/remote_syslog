@@ -15,18 +15,18 @@ def remote_syslog_daemon(args)
   options = {
     :configfile => '/etc/log_files.yml',
     :dest_host  => 'logs.papertrailapp.com',
-    :dest_port  => 514
+    :dest_port  => 514,
+    :strip_color  => false
   }
   daemonize_options = {
-    :app_name    => File.basename($0) || "remote_syslog",
-    :ARGV        => ['start'],
-    :dir_mode    => :system,
-    :multiple    => false,
-    :ontop       => false,
-    :mode        => :exec,
-    :backtrace   => false,
-    :monitor     => false,
-    :strip_color => false
+    :app_name     => File.basename($0) || "remote_syslog",
+    :ARGV         => ['start'],
+    :dir_mode     => :system,
+    :multiple     => false,
+    :ontop        => false,
+    :mode         => :exec,
+    :backtrace    => false,
+    :monitor      => false,
   }
 
   op = OptionParser.new do |opts|
@@ -84,9 +84,9 @@ def remote_syslog_daemon(args)
       options[:dest_host] = config['destination']['host'] if config['destination']['host']
       options[:dest_port] = config['destination']['port'] if config['destination']['port']
     end
-    if config['hostname']
-      options[:hostname] = config['hostname']
-    end
+    
+    options[:hostname] = config['hostname'] if config['hostname']
+    options[:parse_fields] = config['parse_fields'] if config['parse_fields']    
   elsif files.empty?
     puts "No filenames provided and #{options[:configfile]} not found."
     puts ''
@@ -107,7 +107,7 @@ def remote_syslog_daemon(args)
             options[:dest_host], options[:dest_port],
             :socket => socket, :facility => options[:facility],
             :severity => options[:severity], :strip_color => options[:strip_color],
-            :hostname => options[:hostname])
+            :hostname => options[:hostname], :parse_fields => options[:parse_fields])
                                   
         rescue Errno::ENOENT => e
           puts "#{File.expand_path(path)} not found, continuing. (#{e.message})"

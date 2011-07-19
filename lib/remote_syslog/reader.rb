@@ -13,8 +13,9 @@ module RemoteSyslog
       @destination_address = destination_address
       @destination_port    = destination_port.to_i
 
+      @parse_fields = options[:parse_fields]
       @strip_color = options[:strip_color]
-
+      
       @socket = options[:socket] || EventMachine.open_datagram_socket('0.0.0.0', 0)
 
       @buffer = BufferedTokenizer.new
@@ -62,6 +63,13 @@ module RemoteSyslog
 
       packet = @packet.dup
       packet.content = message
+      
+      if @parse_fields
+        matches = message.match(@parse_fields)
+        packet.hostname = matches[2] if matches[2] && matches[2] != ''
+        packet.tag = matches[3] if matches[3] && matches[3] != ''
+        message = matches[4] if matches[4] && matches[4] != ''
+      end
 
       @socket.send_datagram(packet.assemble, destination_address, @destination_port)
     end

@@ -1,0 +1,5 @@
+files: [/var/log/messages]
+parse_syslog: !ruby/regexp '/(\w+ \d+ \S+) (\S+) ([^\[]+)\S+: (.*)/'
+destination:
+  host: logs.papertrailapp.com
+  port: 12345   # optional, defaults to 514
