@@ -81,8 +81,8 @@ def remote_syslog_daemon(args)
     
     files += config['files']
     if config['destination']
-      options[:dest_host] = config['destination']['host'] if config['destination']['host']
-      options[:dest_port] = config['destination']['port'] if config['destination']['port']
+      options[:dest_host] = config['destination']['host'] if config['destination']['host'] && !options[:dest_host]
+      options[:dest_port] = config['destination']['port'] if config['destination']['port'] && !options[:dest_host]
     end
     if config['hostname']
       options[:hostname] = config['hostname']
