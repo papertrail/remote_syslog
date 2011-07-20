@@ -68,7 +68,7 @@ module RemoteSyslog
         matches = message.match(@parse_fields)
         packet.hostname = matches[2] if matches[2] && matches[2] != ''
         packet.tag = matches[3] if matches[3] && matches[3] != ''
-        message = matches[4] if matches[4] && matches[4] != ''
+        packet.content = matches[4] if matches[4] && matches[4] != ''
       end
 
       @socket.send_datagram(packet.assemble, destination_address, @destination_port)

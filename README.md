@@ -90,6 +90,42 @@ Only 1 destination server is supported; the command-line argument wins.
       port: 12345
 
 
+### Optional: Parse fields from messages written by syslogd
+
+This is not needed for most configurations.
+
+In cases where logs from multiple programs are in the same file (for example, 
+``/var/log/messages``), the log line may include text that is not part of the 
+log message, like a timestamp, hostname, or program name. remote_syslog can 
+parse the program, hostname, and/or message text so that the message has 
+accurate metadata.
+
+To do that, add an optional top-level configuration option `parse_fields` 
+with the name of a predefined regex or a regex string. To use the predefined 
+regex for standard syslog messages, provide:
+
+    parse_fields: syslog
+
+The "syslog" regex is `(\w+ \d+ \S+) (\S+) ([^\[]+)\S+: (.*)`. It parses 
+lines like this:
+
+    Jul 18 08:25:08 hostname programname[1234]: The log message
+
+Or provide your own regex that includes 4 backreferences. In order: 
+timestamp, system name, program name, message. Match and return empty 
+strings for any empty positions where the log value should be ignored.
+For example, in the log:
+
+    something-meaningless The log message
+
+You could ignore the first word, returning 3 empty values then the log 
+message with:
+
+    parse_fields: "something-meaningless ()()()(.*)"
+
+Per-file parsing is not supported. Run multiple instances.
+
+
 ## Reporting bugs
 
 1. See whether the issue has already been reported: <https://github.com/papertrail/remote_syslog/issues/>

@@ -28,6 +28,10 @@ def remote_syslog_daemon(args)
     :backtrace    => false,
     :monitor      => false,
   }
+  
+  FIELD_REGEXES = {
+    'syslog' => Regexp.new('\w+ \d+ \S+) (\S+) ([^\[]+)\S+: (.*)')
+  }
 
   op = OptionParser.new do |opts|
     opts.banner = "Usage:   remote_syslog [options] <path to add'l log 1> .. <path to add'l log n>"
@@ -86,7 +90,9 @@ def remote_syslog_daemon(args)
     end
     
     options[:hostname] = config['hostname'] if config['hostname']
-    options[:parse_fields] = config['parse_fields'] if config['parse_fields']    
+    if config['parse_fields']
+      options[:parse_fields] = FIELD_REGEXES[config['parse_fields']] || Regexp.new(config['parse_fields'])
+    end
   elsif files.empty?
     puts "No filenames provided and #{options[:configfile]} not found."
     puts ''
