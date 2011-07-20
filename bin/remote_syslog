@@ -30,7 +30,7 @@ def remote_syslog_daemon(args)
   }
   
   FIELD_REGEXES = {
-    'syslog' => Regexp.new('\w+ \d+ \S+) (\S+) ([^\[]+)\S+: (.*)')
+    'syslog' => Regexp.new('(\w+ \d+ \S+) (\S+) ([^:]+): (.*)')
   }
 
   op = OptionParser.new do |opts|

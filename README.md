@@ -101,17 +101,16 @@ parse the program, hostname, and/or message text so that the message has
 accurate metadata.
 
 To do that, add an optional top-level configuration option `parse_fields` 
-with the name of a predefined regex or a regex string. To use the predefined 
-regex for standard syslog messages, provide:
+with the name of a predefined regex (by remote_syslog) or a regex string. To 
+use the predefined regex for standard syslog messages, provide:
 
     parse_fields: syslog
 
-The "syslog" regex is `(\w+ \d+ \S+) (\S+) ([^\[]+)\S+: (.*)`. It parses 
-lines like this:
+The `syslog` regex is `(\w+ \d+ \S+) (\S+) ([^:]+): (.*)`. It parses this:
 
     Jul 18 08:25:08 hostname programname[1234]: The log message
 
-Or provide your own regex that includes 4 backreferences. In order: 
+Or provide your own regex that includes these 4 backreferences, in order: 
 timestamp, system name, program name, message. Match and return empty 
 strings for any empty positions where the log value should be ignored.
 For example, in the log:
