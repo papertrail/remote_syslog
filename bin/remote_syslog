@@ -63,6 +63,9 @@ def remote_syslog_daemon(args)
       daemonize_options[:dir_mode] = :script
       daemonize_options[:dir] = v
     end
+    opts.on("--pid-file FILENAME", "PID filename (<program name>.pid)") do |v|
+      daemonize_options[:app_name] = v
+    end
     opts.on("-s", "--severity SEVERITY", "Severity (notice)") do |v|
       options[:severity] = v.upcase
     end
