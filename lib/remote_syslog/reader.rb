@@ -1,3 +1,4 @@
+require 'socket'
 require 'eventmachine'
 require 'eventmachine-tail'
 require 'em-dns-resolver'
@@ -15,7 +16,7 @@ module RemoteSyslog
 
       @parse_fields = options[:parse_fields]
       @strip_color = options[:strip_color]
-      
+
       @socket = options[:socket] || EventMachine.open_datagram_socket('0.0.0.0', 0)
 
       @buffer = BufferedTokenizer.new
@@ -31,6 +32,11 @@ module RemoteSyslog
       @packet.facility = options[:facility] || 'user'
       @packet.severity = options[:severity] || 'notice'
       @packet.tag      = options[:program]  || File.basename(path) || File.basename($0)
+
+      # Make sure the tag isn't too long
+      if @packet.tag.length > 32
+        @packet.tag = @packet.tag[0..31]
+      end
 
       # Try to resolve the destination address
       resolve_destination_address
@@ -63,13 +69,12 @@ module RemoteSyslog
 
       packet = @packet.dup
       packet.content = message
-      
+
       if @parse_fields
-        matches = message.match(@parse_fields)
-        if matches
-          packet.hostname = matches[2] if matches[2] && matches[2] != ''
-          packet.tag = matches[3] if matches[3] && matches[3] != ''
-          packet.content = matches[4] if matches[4] && matches[4] != ''
+        if message =~ @parse_fields
+          packet.hostname = $2
+          packet.tag      = $3
+          packet.content  = $4
         end
       end
 
