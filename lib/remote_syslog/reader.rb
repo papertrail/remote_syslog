@@ -72,9 +72,9 @@ module RemoteSyslog
 
       if @parse_fields
         if message =~ @parse_fields
-          packet.hostname = $2
-          packet.tag      = $3
-          packet.content  = $4
+          packet.hostname = $2 if $2 && $2 != ''
+          packet.tag      = $3 if $3 && $2 != ''
+          packet.content  = $4 if $4 && $4 != ''
         end
       end
 
