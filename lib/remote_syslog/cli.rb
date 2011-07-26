@@ -22,8 +22,6 @@ module RemoteSyslog
       @app_name = File.basename($0) || 'remote_syslog'
 
       @configfile  = '/etc/log_files.yml'
-      @dest_host   = 'logs.papertrailapp.com'
-      @dest_port   = 514
       @strip_color = false
 
       @daemonize_options = {
@@ -97,6 +95,9 @@ module RemoteSyslog
 
       parse_config
 
+      @dest_host ||= 'logs.papertrailapp.com'
+      @dest_port ||= 514
+
       if @files.empty?
         puts "No filenames provided and #{@configfile} not found."
         puts ''
@@ -117,9 +118,12 @@ module RemoteSyslog
 
         @files += Array(config['files'])
 
-        if config['destination']
-          options[:dest_host] = config['destination']['host'] if config['destination']['host']
-          options[:dest_port] = config['destination']['port'] if config['destination']['port']
+        if config['destination'] && config['destination']['host']
+          @dest_host ||= config['destination']['host']
+        end
+
+        if config['destination'] && config['destination']['port']
+          @dest_port ||= config['destination']['port']
         end
 
         if config['hostname']
