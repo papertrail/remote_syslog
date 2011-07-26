@@ -1,3 +1,4 @@
+require 'socket'
 require 'eventmachine'
 require 'eventmachine-tail'
 require 'em-dns-resolver'
@@ -13,6 +14,7 @@ module RemoteSyslog
       @destination_address = destination_address
       @destination_port    = destination_port.to_i
 
+      @parse_fields = options[:parse_fields]
       @strip_color = options[:strip_color]
 
       @socket = options[:socket] || EventMachine.open_datagram_socket('0.0.0.0', 0)
@@ -30,6 +32,11 @@ module RemoteSyslog
       @packet.facility = options[:facility] || 'user'
       @packet.severity = options[:severity] || 'notice'
       @packet.tag      = options[:program]  || File.basename(path) || File.basename($0)
+
+      # Make sure the tag isn't too long
+      if @packet.tag.length > 32
+        @packet.tag = @packet.tag[0..31]
+      end
 
       # Try to resolve the destination address
       resolve_destination_address
@@ -62,6 +69,14 @@ module RemoteSyslog
 
       packet = @packet.dup
       packet.content = message
+
+      if @parse_fields
+        if message =~ @parse_fields
+          packet.hostname = $2 if $2 && $2 != ''
+          packet.tag      = $3 if $3 && $2 != ''
+          packet.content  = $4 if $4 && $4 != ''
+        end
+      end
 
       @socket.send_datagram(packet.assemble, destination_address, @destination_port)
     end
