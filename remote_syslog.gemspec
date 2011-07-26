@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   ## If your rubyforge_project name is different, then edit it and comment out
   ## the sub! line in the Rakefile
   s.name              = 'remote_syslog'
-  s.version           = '1.1.1'
-  s.date              = '2011-07-18'
+  s.version           = '1.2.0'
+  s.date              = '2011-07-25'
   s.rubyforge_project = 'remote_syslog'
 
   ## Make sure your summary is short. The description may be as long
@@ -61,10 +61,11 @@ Gem::Specification.new do |s|
     Rakefile
     bin/remote_syslog
     examples/log_files.yml.example
+    examples/log_files.yml.example.syslog
     examples/remote_syslog.init.d
     examples/remote_syslog.supervisor.conf
     lib/remote_syslog.rb
-    lib/remote_syslog/levels.rb
+    lib/remote_syslog/cli.rb
     lib/remote_syslog/reader.rb
     remote_syslog.gemspec
   ]
