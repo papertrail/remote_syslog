@@ -25,6 +25,7 @@ module RemoteSyslog
       @strip_color = false
 
       @daemonize_options = {
+        :ARGV         => %w(start),
         :dir_mode     => :system,
         :backtrace    => false,
         :monitor      => false,
