@@ -64,7 +64,7 @@ module RemoteSyslog
           @no_detach = true
         end
         opts.on("-f", "--facility FACILITY", "Facility (user)") do |v|
-          @facility = v.upcase
+          @facility = v
         end
         opts.on("--hostname HOST", "Local hostname to send from") do |v|
           @hostname = v
@@ -80,7 +80,7 @@ module RemoteSyslog
           @parse_fields = FIELD_REGEXES['syslog']
         end
         opts.on("-s", "--severity SEVERITY", "Severity (notice)") do |v|
-          @severity = v.upcase
+          @severity = v
         end
         opts.on("--strip-color", "Strip color codes") do
           @strip_color = true
