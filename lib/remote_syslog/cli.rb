@@ -8,6 +8,7 @@ module RemoteSyslog
   class Cli
     FIELD_REGEXES = {
       'syslog' => /^(\w+ \d+ \S+) (\w+) ([^: ]+):? (.*)$/,
+      'rfc3339' => /^(\S+) (\w+) ([^: ]+):? (.*)$/
     }
 
     def self.process!(argv)

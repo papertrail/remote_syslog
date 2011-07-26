@@ -110,6 +110,10 @@ The `syslog` regex is `(\w+ \d+ \S+) (\S+) ([^:]+): (.*)`. It parses this:
 
     Jul 18 08:25:08 hostname programname[1234]: The log message
 
+Or provide `parse_fields: rfc3339` to parse high-precision RFC 3339
+timestamps like:
+    2011-07-16T08:25:08.651413-07:00 hostname programname[1234]: The log message
+    
 Or provide your own regex that includes these 4 backreferences, in order: 
 timestamp, system name, program name, message. Match and return empty 
 strings for any empty positions where the log value should be ignored.
