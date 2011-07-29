@@ -82,6 +82,9 @@ module RemoteSyslog
         opts.on("-s", "--severity SEVERITY", "Severity (notice)") do |v|
           @severity = v
         end
+        opts.on("--tls", "Connect via TCP with TLS") do
+          @tls = true
+        end
         opts.on("--strip-color", "Strip color codes") do
           @strip_color = true
         end
@@ -150,16 +153,19 @@ module RemoteSyslog
 
     def start
       EventMachine.run do
-        socket = EventMachine.open_datagram_socket('0.0.0.0', 0)
+        if @tls
+          connection = TlsEndpoint.new(@dest_host, @dest_port)
+        else
+          connection = UdpEndpoint.new(@dest_host, @dest_port)
+        end
 
         @files.each do |path|
           begin
             EventMachine::file_tail(path, RemoteSyslog::Reader,
               @dest_host, @dest_port,
-              :socket => socket, :facility => @facility,
+              :socket => connection, :facility => @facility,
               :severity => @severity, :strip_color => @strip_color,
               :hostname => @hostname, :parse_fields => @parse_fields)
-
           rescue Errno::ENOENT => e
             puts "#{path} not found, continuing. (#{e.message})"
           end
