@@ -56,15 +56,12 @@ module RemoteSyslog
     def write(value)
       if @connection
         if @queue
-          @queue.each do |line|
-            @connection.send_data(line.gsub(/\n/, ' ') + "\n")
-          end
+          @connection.send_data(@queue.join("\n") + "\n")
           @queue = nil
         end
         @connection.send_data(value + "\n")
       else
-        @queue ||= []
-        @queue << value
+        (@queue ||= []) << value
       end
     end
   end

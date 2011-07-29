@@ -25,7 +25,6 @@ module RemoteSyslog
       @cached_ip || @address
     end
 
-
     def write(value)
       @socket.send_datagram(value, address, @port)
     end
