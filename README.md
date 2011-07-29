@@ -41,14 +41,17 @@ specified as arguments to the remote_syslog daemon. More below.
     Options:
         -c, --configfile PATH            Path to config (/etc/log_files.yml)
         -d, --dest-host HOSTNAME         Destination syslog hostname or IP (logs.papertrailapp.com)
+        -p, --dest-port PORT             Destination syslog port (514)
         -D, --no-detach                  Don't daemonize and detach from the terminal
         -f, --facility FACILITY          Facility (user)
-        -p, --dest-port PORT             Destination syslog port (514)
+            --hostname HOST              Local hostname to send from
         -P, --pid-dir DIRECTORY          Directory to write .pid file in (/var/run/)
+            --pid-file FILENAME          PID filename (<program name>.pid)
+            --parse-syslog               Parse file as syslog-formatted file
         -s, --severity SEVERITY          Severity (notice)
+            --tls                        Connect via TCP with TLS
             --strip-color                Strip color codes
         -h, --help                       Show this message
-
     
 
 ## Example
@@ -67,6 +70,13 @@ remote_syslog will daemonize by default. A sample init file is in the gem as
 remote_syslog.init.d. You may be able to:
 
     $ cp examples/remote_syslog.init.d /etc/init.d/remote_syslog
+
+## Sending messages securely ##
+
+If the receiving system supports sending syslog over TCP with TLS, you can
+pass the `--tls` option when running `remote_syslog`:
+
+    $ remote_syslog --tls -p 1234 /var/log/mysqld.log
 
 
 ## Configuration
