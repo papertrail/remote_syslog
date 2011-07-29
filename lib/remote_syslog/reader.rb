@@ -11,13 +11,10 @@ module RemoteSyslog
     def initialize(path, destination_address, destination_port, options = {})
       super(path, -1)
 
-      @destination_address = destination_address
-      @destination_port    = destination_port.to_i
-
       @parse_fields = options[:parse_fields]
       @strip_color = options[:strip_color]
 
-      @socket = options[:socket] || EventMachine.open_datagram_socket('0.0.0.0', 0)
+      @socket = options[:socket] || UdpEndpoint.new(destination_address, destination_port)
 
       @buffer = BufferedTokenizer.new
 
@@ -37,31 +34,12 @@ module RemoteSyslog
       if @packet.tag.length > 32
         @packet.tag = @packet.tag[0..31]
       end
-
-      # Try to resolve the destination address
-      resolve_destination_address
-
-      # Every 60 seconds we'll see if the address has changed
-      EventMachine.add_periodic_timer(60) do
-        resolve_destination_address
-      end
-    end
-
-    def resolve_destination_address
-      request = EventMachine::DnsResolver.resolve(@destination_address)
-      request.callback do |addrs|
-        @cached_destination_ip = addrs.first
-      end
     end
 
     def receive_data(data)
       @buffer.extract(data).each do |line|
         transmit(line)
       end
-    end
-
-    def destination_address
-      @cached_destination_ip || @destination_address
     end
 
     def transmit(message)
@@ -78,7 +56,7 @@ module RemoteSyslog
         end
       end
 
-      @socket.send_datagram(packet.assemble, destination_address, @destination_port)
+      @socket.write(packet.assemble)
     end
   end
 end
