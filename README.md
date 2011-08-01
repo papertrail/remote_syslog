@@ -49,8 +49,8 @@ specified as arguments to the remote_syslog daemon. More below.
             --pid-file FILENAME          PID filename (<program name>.pid)
             --parse-syslog               Parse file as syslog-formatted file
         -s, --severity SEVERITY          Severity (notice)
-            --tls                        Connect via TCP with TLS
             --strip-color                Strip color codes
+            --tls                        Connect via TCP with TLS
         -h, --help                       Show this message
     
 

@@ -82,11 +82,11 @@ module RemoteSyslog
         opts.on("-s", "--severity SEVERITY", "Severity (notice)") do |v|
           @severity = v
         end
-        opts.on("--tls", "Connect via TCP with TLS") do
-          @tls = true
-        end
         opts.on("--strip-color", "Strip color codes") do
           @strip_color = true
+        end
+        opts.on("--tls", "Connect via TCP with TLS") do
+          @tls = true
         end
         opts.on_tail("-h", "--help", "Show this message") do
           puts opts
