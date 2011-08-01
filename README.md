@@ -139,6 +139,16 @@ message with:
 Per-file parsing is not supported. Run multiple instances.
 
 
+### Optional: Run multiple instances
+
+Run multiple instances to support more than one message-specific file format 
+(concurrently) or to specify distinct syslog hostnames. To do so, provide
+an alternative PID filename as a command-line option to additional 
+instance(s), such as:
+
+    --pid-file remote_syslog_2.pid
+    
+
 ## Reporting bugs
 
 1. See whether the issue has already been reported: <https://github.com/papertrail/remote_syslog/issues/>
