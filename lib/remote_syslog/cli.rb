@@ -7,7 +7,7 @@ require 'daemons'
 module RemoteSyslog
   class Cli
     FIELD_REGEXES = {
-      'syslog' => /^(\w+ \d+ \S+) (\w+) ([^: ]+):? (.*)$/,
+      'syslog' => /^(\w+ +\d+ \S+) (\w+) ([^: ]+):? (.*)$/,
       'rfc3339' => /^(\S+) (\w+) ([^: ]+):? (.*)$/
     }
 
