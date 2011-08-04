@@ -28,12 +28,14 @@ module RemoteSyslog
       @packet.hostname = local_hostname
       @packet.facility = options[:facility] || 'user'
       @packet.severity = options[:severity] || 'notice'
-      @packet.tag      = options[:program]  || File.basename(path) || File.basename($0)
+
+      tag = options[:program]  || File.basename(path) || File.basename($0)
 
       # Make sure the tag isn't too long
-      if @packet.tag.length > 32
-        @packet.tag = @packet.tag[0..31]
+      if tag.length > 32
+        tag = tag[0..31]
       end
+      @packet.tag = tag
     end
 
     def receive_data(data)
