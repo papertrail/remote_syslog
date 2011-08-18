@@ -104,7 +104,7 @@ module RemoteSyslog
       @dest_port ||= 514
 
       if @files.empty?
-        puts "No filenames provided and #{@configfile} not found."
+        puts "No filenames provided and #{@configfile} not found or malformed."
         puts ''
         puts op
         exit
