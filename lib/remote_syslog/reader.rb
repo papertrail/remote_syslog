@@ -3,10 +3,12 @@ require 'eventmachine'
 require 'eventmachine-tail'
 require 'em-dns-resolver'
 require 'syslog_protocol'
+require 'iconv'
 
 module RemoteSyslog
   class Reader < EventMachine::FileTail
     COLORED_REGEXP = /\e\[(?:(?:[34][0-7]|[0-9]);){0,2}(?:[34][0-7]|[0-9])m/
+    CHECK_ENCODING = ''.respond_to?(:valid_encoding?) # valid_encoding? is not available in ruby 1.8
 
     def initialize(path, destination_address, destination_port, options = {})
       super(path, -1)
@@ -39,6 +41,7 @@ module RemoteSyslog
     end
 
     def receive_data(data)
+      data = Iconv.conv("#{data.encoding.name}//IGNORE", data.encoding.name, data) if CHECK_ENCODING && !data.valid_encoding?
       @buffer.extract(data).each do |line|
         transmit(line)
       end
