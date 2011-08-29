@@ -111,7 +111,7 @@ module RemoteSyslog
       end
 
       # handle relative paths before Daemonize changes the wd to / and expand wildcards
-      @files = @files.map { |f| Dir.glob(f) }.flatten.map { |f| File.expand_path(f) }.uniq
+      @files = @files.flatten.map { |f| File.expand_path(f) }.uniq
 
     end
 
@@ -161,7 +161,11 @@ module RemoteSyslog
 
         @files.each do |path|
           begin
-            EventMachine::file_tail(path, RemoteSyslog::Reader,
+            glob_check_interval = 60
+            exclude_files       = []
+
+            EventMachine::FileGlobWatchTail.new(path, RemoteSyslog::Reader,
+              glob_check_interval, exclude_files,
               @dest_host, @dest_port,
               :socket => connection, :facility => @facility,
               :severity => @severity, :strip_color => @strip_color,
