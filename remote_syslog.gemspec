@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.authors  = [ 'Troy Davis', 'Eric Lindvall' ]
   s.email    = [ 'troy@sevenscale.com', 'eric@sevenscale.com' ]
   s.homepage = 'http://github.com/papertrail/remote_syslog'
-  
+
   ## This gets added to the $LOAD_PATH so that 'lib/NAME.rb' can be required as
   ## require 'NAME.rb' or'/lib/NAME/file.rb' can be as require 'NAME/file.rb'
   s.require_paths = %w[lib]
@@ -43,13 +43,13 @@ Gem::Specification.new do |s|
   s.add_dependency 'daemons'
   s.add_dependency 'eventmachine', [ '~> 0.12.10' ]
   s.add_dependency 'eventmachine-tail'
-  s.add_dependency 'syslog_protocol'
+  s.add_dependency 'syslog_protocol', [ '~> 0.9.1' ]
   s.add_dependency 'em-resolv-replace'
 
   ## List your development dependencies here. Development dependencies are
   ## those that are only needed during development
   #s.add_development_dependency('DEVDEPNAME', [">= 1.1.0", "< 2.0.0"])
-  
+
   ## Leave this section as-is. It will be automatically generated from the
   ## contents of your Git repository via the gemspec task. DO NOT REMOVE
   ## THE MANIFEST COMMENTS, they are used as delimiters by the task.
