@@ -61,7 +61,7 @@ Gem::Specification.new do |s|
     Rakefile
     bin/remote_syslog
     examples/log_files.yml.example
-    examples/log_files.yml.example.syslog
+    examples/log_files.yml.example.advanced
     examples/remote_syslog.init.d
     examples/remote_syslog.supervisor.conf
     lib/remote_syslog.rb

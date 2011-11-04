@@ -1,0 +1,7 @@
+# see README - demonstrates all optional arguments
+files: [/var/log/httpd/access_log, /opt/misc/*]
+hostname: www42   # override OS hostname
+parse_fields: syslog   # predefined regex name or double-quoted regex
+destination:
+  host: logs.papertrailapp.com
+  port: 12345   # optional, defaults to 514
