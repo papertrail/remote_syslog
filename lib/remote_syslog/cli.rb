@@ -152,6 +152,7 @@ module RemoteSyslog
     end
 
     def start
+      puts "Watching #{@files.length} files/paths. Sending to #{@dest_host}:#{@dest_port} (#{@tls ? 'TCP/TLS' : 'UDP'})."
       EventMachine.run do
         if @tls
           connection = TlsEndpoint.new(@dest_host, @dest_port)
