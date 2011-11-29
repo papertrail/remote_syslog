@@ -49,7 +49,7 @@ module RemoteSyslog
         opts.separator ''
         opts.separator "Example: remote_syslog -c configs/logs.yml -p 12345 /var/log/mysqld.log"
         opts.separator ''
-        opts.separator "Options:"
+        opts.separator "Options (default):"
 
         opts.on("-c", "--configfile PATH", "Path to config (/etc/log_files.yml)") do |v|
           @configfile = File.expand_path(v)
