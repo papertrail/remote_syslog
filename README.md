@@ -38,7 +38,7 @@ specified as command-line arguments (below).
 
     Example: remote_syslog -c configs/logs.yml -p 12345 /var/log/mysqld.log
 
-    Options:
+    Options (default):
         -c, --configfile PATH            Path to config (/etc/log_files.yml)
         -d, --dest-host HOSTNAME         Destination syslog hostname or IP (logs.papertrailapp.com)
         -p, --dest-port PORT             Destination syslog port (514)
