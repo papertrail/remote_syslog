@@ -83,7 +83,6 @@ pass the `--tls` option when running `remote_syslog`:
 
     $ remote_syslog --tls -p 1234 /var/log/mysqld.log
 
-
 ## Configuration
 
 By default, the gem looks for a configuration in /etc/log_files.yml.
@@ -104,6 +103,9 @@ Only 1 destination server is supported; the command-line argument wins.
       host: logs.papertrailapp.com
       port: 12345
 
+remote_syslog sends the name of the file without a path ("mysqld.log") as 
+the syslog tag (program name). RFCs 3164 and 5424 limit the tag to 32 
+characters. Longer filenames are truncated to 32 characters.
 
 ## Advanced Configuration (Optional)
 
