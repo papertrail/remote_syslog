@@ -1,7 +1,7 @@
 files: 
   - /var/log/httpd/access_log
   - /var/log/httpd/error_log
-  - /opt/misc/*
+  - /opt/misc/*.log
   - /var/log/mysqld.log
   - /var/run/mysqld/mysqld-slow.log
 destination:
