@@ -3,12 +3,22 @@ module RemoteSyslog
     class Handler < EventMachine::Connection
       def initialize(endpoint)
         @endpoint = endpoint
-        @endpoint.connection = self
         super()
       end
 
       def connection_completed
-        start_tls
+        start_tls(:verify_peer => @endpoint.server_cert != nil,
+          :cert_chain_file => @endpoint.client_cert_chain,
+          :private_key_file => @endpoint.client_private_key)
+      end
+
+      def ssl_verify_peer(peer_cert)
+        peer_cert = OpenSSL::X509::Certificate.new(peer_cert)
+        peer_cert.verify(@endpoint.server_cert.public_key)
+      end
+
+      def ssl_handshake_completed
+        @endpoint.connection = self
       end
 
       def unbind
@@ -17,10 +27,17 @@ module RemoteSyslog
     end
 
     attr_accessor :connection
+    attr_reader :server_cert, :client_cert_chain, :client_private_key
 
-    def initialize(address, port)
-      @address = address
-      @port    = port.to_i
+    def initialize(address, port, options = {})
+      @address            = address
+      @port               = port.to_i
+      @client_cert_chain  = options[:client_cert_chain]
+      @client_private_key = options[:client_private_key]
+
+      if options[:server_cert]
+        @server_cert = OpenSSL::X509::Certificate.new(File.read(options[:server_cert]))
+      end
 
       # Try to resolve the address
       resolve_address

@@ -45,11 +45,11 @@ module RemoteSyslog
 
     def parse
       op = OptionParser.new do |opts|
-        opts.banner = "Usage:   remote_syslog [options] <path to add'l log 1> .. <path to add'l log n>"
+        opts.banner = "Usage: remote_syslog [options] [<logfile>...]"
         opts.separator ''
         opts.separator "Example: remote_syslog -c configs/logs.yml -p 12345 /var/log/mysqld.log"
         opts.separator ''
-        opts.separator "Options (default):"
+        opts.separator "Options:"
 
         opts.on("-c", "--configfile PATH", "Path to config (/etc/log_files.yml)") do |v|
           @configfile = File.expand_path(v)
@@ -117,9 +117,7 @@ module RemoteSyslog
 
     def parse_config
       if File.exist?(@configfile)
-        config = open(@configfile) do |f|
-          YAML.load(f)
-        end
+        config = YAML.load_file(@configfile)
 
         @files += Array(config['files'])
 
@@ -135,6 +133,10 @@ module RemoteSyslog
           @hostname = config['hostname']
         end
 
+        @server_cert        = config['ssl_server_cert']
+        @client_cert_chain  = config['ssl_client_cert_chain']
+        @client_private_key = config['ssl_client_private_key']
+
         if config['parse_fields']
           @parse_fields = FIELD_REGEXES[config['parse_fields']] || Regexp.new(config['parse_fields'])
         end
@@ -142,6 +144,8 @@ module RemoteSyslog
     end
 
     def run
+      puts "Watching #{@files.length} files/paths. Sending to #{@dest_host}:#{@dest_port} (#{@tls ? 'TCP/TLS' : 'UDP'})."
+
       if @no_detach
         start
       else
@@ -152,10 +156,12 @@ module RemoteSyslog
     end
 
     def start
-      puts "Watching #{@files.length} files/paths. Sending to #{@dest_host}:#{@dest_port} (#{@tls ? 'TCP/TLS' : 'UDP'})."
       EventMachine.run do
         if @tls
-          connection = TlsEndpoint.new(@dest_host, @dest_port)
+          connection = TlsEndpoint.new(@dest_host, @dest_port,
+            :client_cert_chain => @client_cert_chain,
+            :client_private_key => @client_private_key,
+            :server_cert => @server_cert)
         else
           connection = UdpEndpoint.new(@dest_host, @dest_port)
         end
