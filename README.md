@@ -146,7 +146,7 @@ This means that files may be added and removed as long as they match a glob
 path provided to `remote_syslog`. Also, explicitly-provided filenames need 
 not exist when `remote_syslog` is started. `remote_syslog` can be preconfigured 
 to monitor log files which are created later (or may never be created).
->>>>>>> Add README coverage of new file detection (thx @benfyvie)
+
 
 ### Multiple instances
 
