@@ -121,6 +121,7 @@ Provide `--hostname somehostname` or use the `hostname` configuration option:
 
     hostname: somehostname
 
+
 ### Verify server certificate
 
 Provide the public key for the remote host when using TLS:
@@ -135,6 +136,17 @@ Provide a client certificate when connecting via TLS:
     ssl_client_cert_chain: syslog_client.crt
     ssl_client_private_key: syslog_client.key
 
+
+### Detecting new files
+
+All input files (filenames or globs) are re-checked for new files every 60
+seconds. Ruby's `Dir.glob` is used.
+
+This means that files may be added and removed as long as they match a glob 
+path provided to `remote_syslog`. Also, explicitly-provided filenames need 
+not exist when `remote_syslog` is started. `remote_syslog` can be preconfigured 
+to monitor log files which are created later (or may never be created).
+>>>>>>> Add README coverage of new file detection (thx @benfyvie)
 
 ### Multiple instances
 
