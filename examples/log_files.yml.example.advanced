@@ -1,5 +1,5 @@
-# see README - demonstrates all optional arguments
-files: [/var/log/httpd/access_log, /opt/misc/*]
+# see README - demonstrates all optional arguments and file glob formats
+files: [/var/log/httpd/access_log, /opt/misc/*, /some/daemon/**/*.log]
 hostname: www42   # override OS hostname
 parse_fields: syslog   # predefined regex name or double-quoted regex
 destination:
