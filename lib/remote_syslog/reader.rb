@@ -13,6 +13,7 @@ module RemoteSyslog
 
       @parse_fields = options[:parse_fields]
       @strip_color = options[:strip_color]
+      @exclude_patterns = options[:exclude_patterns]
 
       @socket = options[:socket] || UdpEndpoint.new(destination_address, destination_port)
 
@@ -45,6 +46,13 @@ module RemoteSyslog
     end
 
     def transmit(message)
+      for pattern in @exclude_patterns
+        if pattern.match(message) != nil then
+          puts "excluding"
+          return
+        end
+      end
+
       message = message.gsub(COLORED_REGEXP, '') if @strip_color
 
       packet = @packet.dup
