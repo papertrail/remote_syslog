@@ -24,7 +24,7 @@ module RemoteSyslog
 
       @configfile  = '/etc/log_files.yml'
       @strip_color = false
-      @exclude_patterns = []
+      @exclude_pattern = nil
 
       @daemonize_options = {
         :ARGV         => %w(start),
@@ -143,7 +143,7 @@ module RemoteSyslog
         end
 
         if config['exclude_patterns']
-          @exclude_patterns = Regexp.new(config['exclude_patterns'].map { |r| "(#{r})" }.join('|'))
+          @exclude_pattern = Regexp.new(config['exclude_patterns'].map { |r| "(#{r})" }.join('|'))
         end
       end
     end
@@ -182,7 +182,7 @@ module RemoteSyslog
               :socket => connection, :facility => @facility,
               :severity => @severity, :strip_color => @strip_color,
               :hostname => @hostname, :parse_fields => @parse_fields,
-              :exclude_patterns => @exclude_patterns)
+              :exclude_pattern => @exclude_pattern)
           rescue Errno::ENOENT => e
             puts "#{path} not found, continuing. (#{e.message})"
           end
