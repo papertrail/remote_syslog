@@ -34,6 +34,7 @@ module RemoteSyslog
       @port               = port.to_i
       @client_cert_chain  = options[:client_cert_chain]
       @client_private_key = options[:client_private_key]
+      @queue_limit        = options[:queue_limit] || 10_000
 
       if options[:server_cert]
         @server_cert = OpenSSL::X509::Certificate.new(File.read(options[:server_cert]))
@@ -79,6 +80,9 @@ module RemoteSyslog
         @connection.send_data(value + "\n")
       else
         (@queue ||= []) << value
+
+        # Make sure our queue does not get to be too big
+        @queue.shift if @queue.length > @queue_limit
       end
     end
   end
