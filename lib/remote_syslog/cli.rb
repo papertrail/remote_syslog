@@ -143,7 +143,7 @@ module RemoteSyslog
         end
 
         if config['exclude_patterns']
-          @exclude_patterns += Array(config['exclude_patterns']).map { |f| Regexp.new(f) }
+          @exclude_patterns = Regexp.new(config['exclude_patterns'].map { |r| "(#{r})" }.join('|'))
         end
       end
     end

@@ -2,7 +2,9 @@
 files: [/var/log/httpd/access_log, /opt/misc/*, /some/daemon/**/*.log]
 hostname: www42   # override OS hostname
 parse_fields: syslog   # predefined regex name or double-quoted regex
-exclude_patterns: [exclude this, \d+ that]
+exclude_patterns:
+  - exclude this
+  - \d+ things
 destination:
   host: logs.papertrailapp.com
   port: 12345   # optional, defaults to 514

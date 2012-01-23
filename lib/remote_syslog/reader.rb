@@ -46,12 +46,7 @@ module RemoteSyslog
     end
 
     def transmit(message)
-      for pattern in @exclude_patterns
-        if pattern.match(message) != nil then
-          puts "excluding"
-          return
-        end
-      end
+      return if @exclude_patterns && message =~ @exclude_patterns
 
       message = message.gsub(COLORED_REGEXP, '') if @strip_color
 
