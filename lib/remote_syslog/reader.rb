@@ -21,9 +21,14 @@ module RemoteSyslog
 
       @packet = SyslogProtocol::Packet.new
 
-      local_hostname = options[:hostname] || (Socket.gethostname rescue `hostname`.chomp)
-      if local_hostname.nil? || local_hostname.empty?
-        local_hostname = 'localhost'
+      if options[:hostname] && options[:hostname] != ''
+        local_hostname = options[:hostname]
+      else
+        local_hostname = (Socket.gethostname rescue `hostname`.chomp)[/^([^\.]+)/, 1]
+
+        if local_hostname.nil? || local_hostname.empty?
+          local_hostname = 'localhost'
+        end
       end
 
       @packet.hostname = local_hostname
