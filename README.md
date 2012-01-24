@@ -211,7 +211,10 @@ repetitive log lines that are "noise" that you might not be able to filter out
 easily from the respective application.  To filter these lines, use the
 exclude_patterns with an array or regexes:
 
-    exclude_patterns: [exclude this, \d+ things]
+    exclude_patterns:
+     - exclude this
+     - \d+ things
+
 
 ## Reporting bugs
 
