@@ -204,6 +204,14 @@ then the log message, use parse_fields with this regex:
 Per-file regexes are not supported. Run multiple instances with different
 config files.
 
+### Excluding lines matching a pattern
+
+There may be certain log messages that you do not want to be sent.  These may
+repetitive log lines that are "noise" that you might not be able to filter out
+easily from the respective application.  To filter these lines, use the
+exclude_patterns with an array or regexes:
+
+    exclude_patterns: [exclude this, \d+ things]
 
 ## Reporting bugs
 
