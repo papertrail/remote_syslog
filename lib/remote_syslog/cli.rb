@@ -31,6 +31,7 @@ module RemoteSyslog
         :dir_mode     => :system,
         :backtrace    => false,
         :monitor      => false,
+        :multiple     => true
       }
     end
 
