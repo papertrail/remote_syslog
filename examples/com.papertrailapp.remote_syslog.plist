@@ -10,8 +10,6 @@
     <true/>
     <key>UserName</key>
     <string>root</string>
-    <key>WorkingDirectory</key>
-    <string>/</string>
     <key>ProgramArguments</key>
     <array>
       <string>remote_syslog</string>
