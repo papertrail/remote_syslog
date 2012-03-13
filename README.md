@@ -71,8 +71,10 @@ to `a.server.com:514`:
 
     $ remote_syslog -D -d a.server.com -f local0 -P /tmp /var/log/mysqld.log
 
-remote_syslog will daemonize by default. A sample init file is in the gem as
-[remote_syslog.init.d]. You may be able to:
+## Auto-starting at boot
+
+The gem includes sample [init files] such as [remote_syslog.init.d]. remote_syslog will 
+daemonize by default. You may be able to:
 
     $ cp examples/remote_syslog.init.d /etc/init.d/remote_syslog
 
@@ -234,6 +236,7 @@ Once you've made your great commits:
 6. That's it!
 
 [sample config]: https://github.com/papertrail/remote_syslog/blob/master/examples/log_files.yml.example
+[init files]: https://github.com/papertrail/remote_syslog/blob/master/examples/
 [remote_syslog.init.d]: https://github.com/papertrail/remote_syslog/blob/master/examples/remote_syslog.init.d
 [advanced config]: https://github.com/papertrail/remote_syslog/blob/master/examples/log_files.yml.example.advanced
 [fk]: http://help.github.com/forking/
