@@ -4,6 +4,12 @@ require 'eventmachine-tail'
 require 'em-dns-resolver'
 require 'syslog_protocol'
 
+# Force eventmachine-tail not to change the encoding
+# This will allow ruby 1.9 to deal with any file data
+old_verbose, $VERBOSE = $VERBOSE, nil
+EventMachine::FileTail::FORCE_ENCODING = false
+$VERBOSE = old_verbose
+
 module RemoteSyslog
   class Reader < EventMachine::FileTail
     COLORED_REGEXP = /\e\[(?:(?:[34][0-7]|[0-9]);){0,2}(?:[34][0-7]|[0-9])m/
@@ -67,6 +73,10 @@ module RemoteSyslog
       end
 
       @socket.write(packet.assemble)
+    end
+
+    def on_exception(exception)
+      puts "Exception: #{exception.class}: #{exception.message}\n\t#{exception.backtrace.join("\n\t")}"
     end
   end
 end
