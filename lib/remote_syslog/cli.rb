@@ -97,7 +97,7 @@ module RemoteSyslog
 
       op.parse!(@argv)
 
-      @files = @argv
+      @files = @argv.dup.delete_if { |a| a.empty? }
 
       parse_config
 
