@@ -20,6 +20,7 @@ module RemoteSyslog
       @parse_fields = options[:parse_fields]
       @strip_color = options[:strip_color]
       @exclude_pattern = options[:exclude_pattern]
+      @max_message_size = options[:max_message_size] || 1024
 
       @socket = options[:socket] || UdpEndpoint.new(destination_address, destination_port)
 
@@ -72,7 +73,7 @@ module RemoteSyslog
         end
       end
 
-      @socket.write(packet.assemble)
+      @socket.write(packet.assemble(@max_message_size))
     end
 
     def on_exception(exception)

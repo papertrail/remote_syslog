@@ -175,6 +175,11 @@ module RemoteSyslog
           begin
             glob_check_interval = 60
             exclude_files       = []
+            max_message_size    = 1024
+
+            if @tls
+              max_message_size = 10240
+            end
 
             EventMachine::FileGlobWatchTail.new(path, RemoteSyslog::Reader,
               glob_check_interval, exclude_files,
@@ -182,7 +187,8 @@ module RemoteSyslog
               :socket => connection, :facility => @facility,
               :severity => @severity, :strip_color => @strip_color,
               :hostname => @hostname, :parse_fields => @parse_fields,
-              :exclude_pattern => @exclude_pattern)
+              :exclude_pattern => @exclude_pattern,
+              :max_message_size => max_message_size)
           rescue Errno::ENOENT => e
             puts "#{path} not found, continuing. (#{e.message})"
           end

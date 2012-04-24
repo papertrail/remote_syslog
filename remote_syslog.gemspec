@@ -43,7 +43,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'daemons'
   s.add_dependency 'eventmachine', [ '~> 0.12.10' ]
   s.add_dependency 'eventmachine-tail'
-  s.add_dependency 'syslog_protocol', [ '~> 0.9.1' ]
+  s.add_dependency 'syslog_protocol', [ '~> 0.9.2' ]
   s.add_dependency 'em-resolv-replace'
 
   ## List your development dependencies here. Development dependencies are
