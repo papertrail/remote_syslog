@@ -98,6 +98,7 @@ module RemoteSyslog
       op.parse!(@argv)
 
       @files = @argv
+      @files.delete_if { |f| f.nil? || f == '' }
 
       parse_config
 
