@@ -41,7 +41,7 @@ Gem::Specification.new do |s|
   ## that are needed for an end user to actually USE your code.
   #s.add_dependency('DEPNAME', [">= 1.1.0", "< 2.0.0"])
   s.add_dependency 'daemons'
-  s.add_dependency 'eventmachine', [ '~> 0.12.10' ]
+  s.add_dependency 'eventmachine', [ '>= 0.12.10', '< 1.1' ]
   s.add_dependency 'eventmachine-tail'
   s.add_dependency 'syslog_protocol', [ '~> 0.9.2' ]
   s.add_dependency 'em-resolv-replace'
