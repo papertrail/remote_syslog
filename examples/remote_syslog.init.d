@@ -1,4 +1,13 @@
 #!/bin/bash
+#
+#       /etc/init.d/remote_syslog
+#
+# Starts the remote_syslog daemon
+#
+# chkconfig: 345 90 5
+# description: Runs remote_syslog
+#
+# processname: remote_syslog
 
 prog="remote_syslog"
 config="/etc/log_files.yml"
