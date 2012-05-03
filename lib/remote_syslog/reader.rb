@@ -42,12 +42,16 @@ module RemoteSyslog
       @packet.facility = options[:facility] || 'user'
       @packet.severity = options[:severity] || 'notice'
 
-      tag = options[:program]  || File.basename(path) || File.basename($0)
+      tag = options[:program] || File.basename(path) || File.basename($0)
+
+      # Remove characters that can't be in a tag
+      tag = tag.gsub(%r{[: \]\[\\]+}, '-')
 
       # Make sure the tag isn't too long
       if tag.length > 32
         tag = tag[0..31]
       end
+
       @packet.tag = tag
     end
 
