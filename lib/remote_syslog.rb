@@ -1,5 +1,5 @@
 module RemoteSyslog
- VERSION = "1.6.4"
+ VERSION = "1.6.4.1"
 end
 
 require 'remote_syslog/reader'
