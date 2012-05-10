@@ -12,7 +12,7 @@ $VERBOSE = old_verbose
 
 module RemoteSyslog
   class Reader < EventMachine::FileTail
-    COLORED_REGEXP = /\e\[(?:(?:[34][0-7]|[0-9]);){0,2}(?:[34][0-7]|[0-9])m/
+    COLORED_REGEXP = /\e\[(?:(?:[0-9]{1,3});){0,2}(?:[0-9]{1,3})m/
 
     def initialize(path, destination_address, destination_port, options = {})
       super(path, -1)
