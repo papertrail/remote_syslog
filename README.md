@@ -71,6 +71,12 @@ to `a.server.com:514`:
 
     $ remote_syslog -D -d a.server.com -f local0 -P /tmp /var/log/mysqld.log
 
+### Windows
+
+To run in Windows, start in a DOS Prompt or batch file and do not daemonize:
+
+    C:\> remote_syslog -D
+
 ## Auto-starting at boot
 
 The gem includes sample [init files] such as [remote_syslog.init.d]. remote_syslog will 
