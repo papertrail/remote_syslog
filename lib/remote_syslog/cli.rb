@@ -101,6 +101,16 @@ module RemoteSyslog
 
       parse_config
 
+      pid_path = File.join(@daemonize_options[:dir] || '/var/run', @app_name)
+      begin
+        File.open(pid_path, 'w+')
+      rescue
+        puts "Don't have permissions to write PID file #{pid_path}"
+        puts "Consider writing PID to another directory, such as: -P /tmp"
+        puts ''
+        exit
+      end
+
       @dest_host ||= 'logs.papertrailapp.com'
       @dest_port ||= 514
 
