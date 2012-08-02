@@ -147,13 +147,19 @@ Provide a client certificate when connecting via TLS:
 
 ### Detecting new files
 
-All input files (filenames or globs) are re-checked for new files every 60
-seconds. Ruby's `Dir.glob` is used.
+remote_syslog automatically detects and activates new log files that match 
+its file specifiers. For example, `*.log` may be provided as a file specifier, 
+and remote_syslog will detect a `some.log` file created after it was started. 
+Globs are re-checked every 60 seconds. Ruby's `Dir.glob` is used.
 
-This means that files may be added and removed as long as they match a glob 
-path provided to `remote_syslog`. Also, explicitly-provided filenames need 
-not exist when `remote_syslog` is started. `remote_syslog` can be preconfigured 
-to monitor log files which are created later (or may never be created).
+Also, explicitly-provided filenames need not exist when `remote_syslog` is 
+started. `remote_syslog` can be pre-configured to monitor log files which are 
+created later (or may never be created).
+
+If globs are specified on the command-line, enclose each one in single-quotes 
+(`'*.log'`) so the shell passes the raw glob string to remote_syslog (rather 
+than the current set of matches). This is not necessary for globs defined in 
+the config file.
 
 
 ### Multiple instances
