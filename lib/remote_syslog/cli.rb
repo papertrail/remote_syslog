@@ -1,8 +1,9 @@
 require 'optparse'
 require 'yaml'
 require 'pathname'
-require 'daemons'
+require 'servolux'
 
+require 'remote_syslog/agent'
 
 module RemoteSyslog
   class Cli
@@ -10,6 +11,15 @@ module RemoteSyslog
       'syslog' => /^(\w+ +\d+ \S+) (\S+) ([^: ]+):? (.*)$/,
       'rfc3339' => /^(\S+) (\S+) ([^: ]+):? (.*)$/
     }
+
+    DEFAULT_PID_FILES = [
+      "/var/run/remote_syslog.pid",
+      "#{ENV['HOME']}/run/remote_syslog.pid",
+      "#{ENV['HOME']}/tmp/remote_syslog.pid",
+      "#{ENV['HOME']}/remote_syslog.pid",
+      "#{ENV['TMPDIR']}/remote_syslog.pid",
+      "/tmp/remote_syslog.pid"
+    ]
 
     def self.process!(argv)
       c = new(argv)
@@ -19,8 +29,6 @@ module RemoteSyslog
 
     def initialize(argv)
       @argv = argv
-
-      @app_name = File.basename($0) || 'remote_syslog'
 
       @configfile  = '/etc/log_files.yml'
       @strip_color = false
@@ -32,16 +40,20 @@ module RemoteSyslog
         :backtrace    => false,
         :monitor      => false,
       }
+
+      @agent = RemoteSyslog::Agent.new(:pid_file => default_pid_file)
     end
 
-    def pid_file=(v)
-      m = v.match(%r{^(.+/)?([^/]+?)(\.pid)?$})
-      if m[1]
-        @daemonize_options[:dir_mode] = :normal
-        @daemonize_options[:dir] = m[1]
-      end
+    def is_file_writable?(file)
+      directory = File.dirname(file)
 
-      @app_name = m[2]
+      (File.directory?(directory) && File.writable?(directory) && !File.exists?(file)) || File.writable?(file)
+    end
+
+    def default_pid_file
+      DEFAULT_PID_FILES.each do |file|
+        return file if is_file_writable?(file)
+      end
     end
 
     def parse
@@ -56,39 +68,55 @@ module RemoteSyslog
           @configfile = File.expand_path(v)
         end
         opts.on("-d", "--dest-host HOSTNAME", "Destination syslog hostname or IP (logs.papertrailapp.com)") do |v|
-          @dest_host = v
+          @agent.destination_host = v
         end
         opts.on("-p", "--dest-port PORT", "Destination syslog port (514)") do |v|
-          @dest_port = v
+          @agent.destination_port = v
         end
         opts.on("-D", "--no-detach", "Don't daemonize and detach from the terminal") do
           @no_detach = true
         end
         opts.on("-f", "--facility FACILITY", "Facility (user)") do |v|
-          @facility = v
+          @agent.facility = v
         end
         opts.on("--hostname HOST", "Local hostname to send from") do |v|
-          @hostname = v
+          @agent.hostname = v
         end
-        opts.on("-P", "--pid-dir DIRECTORY", "Directory to write .pid file in (/var/run/)") do |v|
-          @daemonize_options[:dir_mode] = :normal
-          @daemonize_options[:dir] = v
+        opts.on("-P", "--pid-dir DIRECTORY", "DEPRECATED: Directory to write .pid file in") do |v|
+          puts "Warning: --pid-dir is deprecated. Please use --pid-file FILENAME instead"
+          @pid_directory = v
         end
-        opts.on("--pid-file FILENAME", "PID filename (<program name>.pid)") do |v|
-          self.pid_file = v
+        opts.on("--pid-file FILENAME", "Location of the PID file (default #{@agent.pid_file})") do |v|
+          @agent.pid_file = v
         end
         opts.on("--parse-syslog", "Parse file as syslog-formatted file") do
-          @parse_fields = FIELD_REGEXES['syslog']
+          @agent.parse_fields = FIELD_REGEXES['syslog']
         end
         opts.on("-s", "--severity SEVERITY", "Severity (notice)") do |v|
-          @severity = v
+          @agent.severity = v
         end
         opts.on("--strip-color", "Strip color codes") do
-          @strip_color = true
+          @agent.strip_color = true
         end
         opts.on("--tls", "Connect via TCP with TLS") do
-          @tls = true
+          @agent.tls = true
         end
+
+        opts.separator ''
+
+        opts.on("--debug-log FILE", "Log internal debug messages") do |v|
+          level = @agent.logger.level
+          @agent.logger = Logger.new(v)
+          @agent.logger.level = level
+        end
+
+        severities = Logger::Severity.constants + Logger::Severity.constants.map { |s| s.downcase }
+        opts.on("--debug-level LEVEL", severities, "Log internal debug messages at level") do |v|
+          @agent.logger.level = Logger::Severity.const_get(v.upcase)
+        end
+
+        opts.separator ''
+
         opts.on_tail("-h", "--help", "Show this message") do
           puts opts
           exit
@@ -101,8 +129,8 @@ module RemoteSyslog
 
       parse_config
 
-      @dest_host ||= 'logs.papertrailapp.com'
-      @dest_port ||= 514
+      @agent.destination_host ||= 'logs.papertrailapp.com'
+      @agent.destination_port ||= 514
 
       if @files.empty?
         puts "No filenames provided and #{@configfile} not found or malformed."
@@ -114,6 +142,21 @@ module RemoteSyslog
       # handle relative paths before Daemonize changes the wd to / and expand wildcards
       @files = @files.flatten.map { |f| File.expand_path(f) }.uniq
 
+      @agent.files = @files
+
+      if @pid_directory
+        if @agent.pid_file
+          @agent.pid_file = File.expand_path("#{@pid_directory}/#{@agent.pid_file}")
+        else
+          @agent.pid_file = File.expand_path("#{@pid_directory}/remote_syslog.pid")
+        end
+      end
+
+      @agent.pid_file ||= default_pid_file
+    rescue OptionParser::ParseError => e
+      puts "Error: #{e.message}\n\n"
+      puts op
+      exit
     end
 
     def parse_config
@@ -123,77 +166,49 @@ module RemoteSyslog
         @files += Array(config['files'])
 
         if config['destination'] && config['destination']['host']
-          @dest_host ||= config['destination']['host']
+          @agent.destination_host ||= config['destination']['host']
         end
 
         if config['destination'] && config['destination']['port']
-          @dest_port ||= config['destination']['port']
+          @agent.destination_port ||= config['destination']['port']
         end
 
         if config['hostname']
-          @hostname = config['hostname']
+          @agent.hostname = config['hostname']
         end
 
-        @server_cert        = config['ssl_server_cert']
-        @client_cert_chain  = config['ssl_client_cert_chain']
-        @client_private_key = config['ssl_client_private_key']
+        @agent.server_cert        = config['ssl_server_cert']
+        @agent.client_cert_chain  = config['ssl_client_cert_chain']
+        @agent.client_private_key = config['ssl_client_private_key']
 
         if config['parse_fields']
-          @parse_fields = FIELD_REGEXES[config['parse_fields']] || Regexp.new(config['parse_fields'])
+          @agent.parse_fields = FIELD_REGEXES[config['parse_fields']] || Regexp.new(config['parse_fields'])
         end
 
         if config['exclude_patterns']
-          @exclude_pattern = Regexp.new(config['exclude_patterns'].map { |r| "(#{r})" }.join('|'))
+          @agent.exclude_pattern = Regexp.new(config['exclude_patterns'].map { |r| "(#{r})" }.join('|'))
         end
       end
     end
 
     def run
-      puts "Watching #{@files.length} files/paths. Sending to #{@dest_host}:#{@dest_port} (#{@tls ? 'TCP/TLS' : 'UDP'})."
+      puts "Watching #{@agent.files.length} files/paths. Sending to #{@agent.destination_host}:#{@agent.destination_port} (#{@agent.tls ? 'TCP/TLS' : 'UDP'})."
 
       if @no_detach
-        start
+        @agent.run
       else
-        Daemons.run_proc(@app_name, @daemonize_options) do
-          start
-        end
+        daemon = Servolux::Daemon.new(:server => @agent)
+        daemon.startup
       end
-    end
-
-    def start
-      EventMachine.run do
-        if @tls
-          connection = TlsEndpoint.new(@dest_host, @dest_port,
-            :client_cert_chain => @client_cert_chain,
-            :client_private_key => @client_private_key,
-            :server_cert => @server_cert)
-        else
-          connection = UdpEndpoint.new(@dest_host, @dest_port)
-        end
-
-        @files.each do |path|
-          begin
-            glob_check_interval = 60
-            exclude_files       = []
-            max_message_size    = 1024
-
-            if @tls
-              max_message_size = 10240
-            end
-
-            EventMachine::FileGlobWatchTail.new(path, RemoteSyslog::Reader,
-              glob_check_interval, exclude_files,
-              @dest_host, @dest_port,
-              :socket => connection, :facility => @facility,
-              :severity => @severity, :strip_color => @strip_color,
-              :hostname => @hostname, :parse_fields => @parse_fields,
-              :exclude_pattern => @exclude_pattern,
-              :max_message_size => max_message_size)
-          rescue Errno::ENOENT => e
-            puts "#{path} not found, continuing. (#{e.message})"
-          end
-        end
+    rescue Servolux::Daemon::StartupError => e
+      case message = e.message[/^(Child raised error: )?(.*)$/, 2]
+      when /#<Errno::EACCES: (.*)>$/
+        puts "Error: #{$1}"
+      else
+        puts "Error: #{message}"
       end
+    rescue Interrupt
+      exit(0)
     end
   end
 end

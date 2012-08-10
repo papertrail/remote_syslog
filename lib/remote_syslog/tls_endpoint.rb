@@ -1,3 +1,5 @@
+require 'eventmachine'
+
 module RemoteSyslog
   class TlsEndpoint
     class Handler < EventMachine::Connection
@@ -29,12 +31,15 @@ module RemoteSyslog
     attr_accessor :connection
     attr_reader :server_cert, :client_cert_chain, :client_private_key
 
+    attr_reader :logger
+
     def initialize(address, port, options = {})
       @address            = address
       @port               = port.to_i
       @client_cert_chain  = options[:client_cert_chain]
       @client_private_key = options[:client_private_key]
       @queue_limit        = options[:queue_limit] || 10_000
+      @logger             = options[:logger] || Logger.new(STDERR)
 
       if options[:server_cert]
         @server_cert = OpenSSL::X509::Certificate.new(File.read(options[:server_cert]))
@@ -51,6 +56,12 @@ module RemoteSyslog
       connect
     end
 
+    def connection=(conn)
+      port, ip = Socket.unpack_sockaddr_in(conn.get_peername)
+      logger.debug "Connected to #{ip}:#{port}"
+      @connection = conn
+    end
+
     def resolve_address
       request = EventMachine::DnsResolver.resolve(@address)
       request.callback do |addrs|
@@ -63,6 +74,7 @@ module RemoteSyslog
     end
 
     def connect
+      logger.debug "Connecting to #{address}:#{@port}"
       EventMachine.connect(address, @port, TlsEndpoint::Handler, self)
     end
 

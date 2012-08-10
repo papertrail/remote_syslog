@@ -40,7 +40,8 @@ Gem::Specification.new do |s|
   ## List your runtime dependencies here. Runtime dependencies are those
   ## that are needed for an end user to actually USE your code.
   #s.add_dependency('DEPNAME', [">= 1.1.0", "< 2.0.0"])
-  s.add_dependency 'daemons'
+  s.add_dependency 'servolux'
+  s.add_dependency 'file-tail'
   s.add_dependency 'eventmachine', [ '>= 0.12.10', '< 1.1' ]
   s.add_dependency 'eventmachine-tail'
   s.add_dependency 'syslog_protocol', [ '~> 0.9.2' ]
