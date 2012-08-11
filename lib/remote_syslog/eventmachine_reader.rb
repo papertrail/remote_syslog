@@ -25,6 +25,8 @@ module RemoteSyslog
         @tag = @tag[0..31]
       end
 
+      @logger.debug "Watching #{path} with EventMachineReader"
+
       super(path, -1)
     end
 

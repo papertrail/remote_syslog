@@ -2,6 +2,7 @@ require 'eventmachine'
 require 'servolux'
 
 require 'remote_syslog/eventmachine_reader'
+require 'remote_syslog/file_tail_reader'
 require 'remote_syslog/glob_watch'
 require 'remote_syslog/message_generator'
 require 'remote_syslog/udp_endpoint'
@@ -30,9 +31,14 @@ module RemoteSyslog
     # How often should we check for new files?
     attr_accessor :glob_check_interval
 
+    # Should we use eventmachine to tail?
+    attr_accessor :eventmachine_tail
+
     def initialize(options = {})
       @files = []
       @glob_check_interval = 60
+      @eventmachine_tail = options.fetch(:eventmachine_tail, true)
+
       logger = options[:logger] || Logger.new(STDERR)
 
       super('remote_syslog', :logger => logger, :pid_file => options[:pid_file])
@@ -43,8 +49,15 @@ module RemoteSyslog
     end
 
     def watch_file(file)
-      RemoteSyslog::EventMachineReader.new(file, 
-        :callback => @message_generator.method(:transmit))
+      if eventmachine_tail
+        RemoteSyslog::EventMachineReader.new(file,
+          :callback => @message_generator.method(:transmit),
+          :logger => logger)
+      else
+        RemoteSyslog::FileTailReader.new(file,
+          :callback => @message_generator.method(:transmit),
+          :logger => logger)
+      end
     end
 
     def run

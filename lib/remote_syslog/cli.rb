@@ -21,6 +21,8 @@ module RemoteSyslog
       "/tmp/remote_syslog.pid"
     ]
 
+    DEFAULT_CONFIG_FILE = '/etc/log_files.yml'
+
     def self.process!(argv)
       c = new(argv)
       c.parse
@@ -30,7 +32,6 @@ module RemoteSyslog
     def initialize(argv)
       @argv = argv
 
-      @configfile  = '/etc/log_files.yml'
       @strip_color = false
       @exclude_pattern = nil
 
@@ -58,14 +59,13 @@ module RemoteSyslog
 
     def parse
       op = OptionParser.new do |opts|
-        opts.banner = "Usage: remote_syslog [options] [<logfile>...]"
+        opts.banner = "Usage: #{opts.program_name} [OPTION]... <FILE>..."
         opts.separator ''
-        opts.separator "Example: remote_syslog -c configs/logs.yml -p 12345 /var/log/mysqld.log"
-        opts.separator ''
+
         opts.separator "Options:"
 
         opts.on("-c", "--configfile PATH", "Path to config (/etc/log_files.yml)") do |v|
-          @configfile = File.expand_path(v)
+          @configfile = v
         end
         opts.on("-d", "--dest-host HOSTNAME", "Destination syslog hostname or IP (logs.papertrailapp.com)") do |v|
           @agent.destination_host = v
@@ -102,8 +102,18 @@ module RemoteSyslog
           @agent.tls = true
         end
 
-        opts.separator ''
 
+        opts.on("--new-file-check-interval INTERVAL", OptionParser::DecimalInteger,
+          "Time between checks for new files") do |v|
+          @agent.glob_check_interval = v
+        end
+
+        opts.separator ''
+        opts.separator 'Advanced options:'
+
+        opts.on("--[no-]eventmachine-tail", "Enable or disable using eventmachine-tail") do |v|
+          @agent.eventmachine_tail = v
+        end
         opts.on("--debug-log FILE", "Log internal debug messages") do |v|
           level = @agent.logger.level
           @agent.logger = Logger.new(v)
@@ -115,29 +125,47 @@ module RemoteSyslog
           @agent.logger.level = Logger::Severity.const_get(v.upcase)
         end
 
-        opts.separator ''
+        opts.separator ""
+        opts.separator "Common options:"
 
-        opts.on_tail("-h", "--help", "Show this message") do
+        opts.on("-h", "--help", "Show this message") do
           puts opts
           exit
         end
+
+        opts.on("--version", "Show version") do
+          puts RemoteSyslog::VERSION
+          exit(0)
+        end
+
+        opts.separator ''
+        opts.separator "Example:"
+        opts.separator "    $ #{opts.program_name} -c configs/logs.yml -p 12345 /var/log/mysqld.log"
       end
 
       op.parse!(@argv)
 
       @files = @argv.dup.delete_if { |a| a.empty? }
 
-      parse_config
+      if @configfile
+        if File.exists?(@configfile)
+          parse_config(@configfile)
+        else
+          puts "#{op.program_name}: The config file specified could not be found: #{@configfile}"
+          exit(1)
+        end
+      elsif File.exists?(DEFAULT_CONFIG_FILE)
+        parse_config(DEFAULT_CONFIG_FILE)
+      end
+
+      if @files.empty?
+        puts "#{op.program_name}: You must specify at least one file to watch"
+        puts "Try `#{op.program_name} --help' for more information."
+        exit(1)
+      end
 
       @agent.destination_host ||= 'logs.papertrailapp.com'
       @agent.destination_port ||= 514
-
-      if @files.empty?
-        puts "No filenames provided and #{@configfile} not found or malformed."
-        puts ''
-        puts op
-        exit
-      end
 
       # handle relative paths before Daemonize changes the wd to / and expand wildcards
       @files = @files.flatten.map { |f| File.expand_path(f) }.uniq
@@ -154,40 +182,38 @@ module RemoteSyslog
 
       @agent.pid_file ||= default_pid_file
     rescue OptionParser::ParseError => e
-      puts "Error: #{e.message}\n\n"
-      puts op
-      exit
+      puts "#{op.program_name}: #{e.message}"
+      puts "Try `#{op.program_name} --help' for more information."
+      exit(1)
     end
 
-    def parse_config
-      if File.exist?(@configfile)
-        config = YAML.load_file(@configfile)
+    def parse_config(file)
+      config = YAML.load_file(file)
 
-        @files += Array(config['files'])
+      @files += Array(config['files'])
 
-        if config['destination'] && config['destination']['host']
-          @agent.destination_host ||= config['destination']['host']
-        end
+      if config['destination'] && config['destination']['host']
+        @agent.destination_host ||= config['destination']['host']
+      end
 
-        if config['destination'] && config['destination']['port']
-          @agent.destination_port ||= config['destination']['port']
-        end
+      if config['destination'] && config['destination']['port']
+        @agent.destination_port ||= config['destination']['port']
+      end
 
-        if config['hostname']
-          @agent.hostname = config['hostname']
-        end
+      if config['hostname']
+        @agent.hostname = config['hostname']
+      end
 
-        @agent.server_cert        = config['ssl_server_cert']
-        @agent.client_cert_chain  = config['ssl_client_cert_chain']
-        @agent.client_private_key = config['ssl_client_private_key']
+      @agent.server_cert        = config['ssl_server_cert']
+      @agent.client_cert_chain  = config['ssl_client_cert_chain']
+      @agent.client_private_key = config['ssl_client_private_key']
 
-        if config['parse_fields']
-          @agent.parse_fields = FIELD_REGEXES[config['parse_fields']] || Regexp.new(config['parse_fields'])
-        end
+      if config['parse_fields']
+        @agent.parse_fields = FIELD_REGEXES[config['parse_fields']] || Regexp.new(config['parse_fields'])
+      end
 
-        if config['exclude_patterns']
-          @agent.exclude_pattern = Regexp.new(config['exclude_patterns'].map { |r| "(#{r})" }.join('|'))
-        end
+      if config['exclude_patterns']
+        @agent.exclude_pattern = Regexp.new(config['exclude_patterns'].map { |r| "(#{r})" }.join('|'))
       end
     end
 
