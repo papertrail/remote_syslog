@@ -29,8 +29,11 @@ module RemoteSyslog
       c.run
     end
 
+    attr_reader :program_name
+
     def initialize(argv)
       @argv = argv
+      @program_name = File.basename($0)
 
       @strip_color = false
       @exclude_pattern = nil
@@ -59,7 +62,7 @@ module RemoteSyslog
 
     def parse
       op = OptionParser.new do |opts|
-        opts.banner = "Usage: #{opts.program_name} [OPTION]... <FILE>..."
+        opts.banner = "Usage: #{program_name} [OPTION]... <FILE>..."
         opts.separator ''
 
         opts.separator "Options:"
@@ -140,7 +143,7 @@ module RemoteSyslog
 
         opts.separator ''
         opts.separator "Example:"
-        opts.separator "    $ #{opts.program_name} -c configs/logs.yml -p 12345 /var/log/mysqld.log"
+        opts.separator "    $ #{program_name} -c configs/logs.yml -p 12345 /var/log/mysqld.log"
       end
 
       op.parse!(@argv)
@@ -151,17 +154,14 @@ module RemoteSyslog
         if File.exists?(@configfile)
           parse_config(@configfile)
         else
-          puts "#{op.program_name}: The config file specified could not be found: #{@configfile}"
-          exit(1)
+          error "The config file specified could not be found: #{@configfile}"
         end
       elsif File.exists?(DEFAULT_CONFIG_FILE)
         parse_config(DEFAULT_CONFIG_FILE)
       end
 
       if @files.empty?
-        puts "#{op.program_name}: You must specify at least one file to watch"
-        puts "Try `#{op.program_name} --help' for more information."
-        exit(1)
+        error "You must specify at least one file to watch"
       end
 
       @agent.destination_host ||= 'logs.papertrailapp.com'
@@ -182,9 +182,7 @@ module RemoteSyslog
 
       @agent.pid_file ||= default_pid_file
     rescue OptionParser::ParseError => e
-      puts "#{op.program_name}: #{e.message}"
-      puts "Try `#{op.program_name} --help' for more information."
-      exit(1)
+      error e.message, true
     end
 
     def parse_config(file)
@@ -218,12 +216,17 @@ module RemoteSyslog
     end
 
     def run
-      puts "Watching #{@agent.files.length} files/paths. Sending to #{@agent.destination_host}:#{@agent.destination_port} (#{@agent.tls ? 'TCP/TLS' : 'UDP'})."
-
       if @no_detach
+        puts "Watching #{@agent.files.length} files/paths. Sending to #{@agent.destination_host}:#{@agent.destination_port} (#{@agent.tls ? 'TCP/TLS' : 'UDP'})."
         @agent.run
       else
         daemon = Servolux::Daemon.new(:server => @agent)
+
+        if daemon.alive?
+          error "Already running at #{@agent.pid_file}. To run another instance, specify a different `--pid-file`.", true
+        end
+
+        puts "Watching #{@agent.files.length} files/paths. Sending to #{@agent.destination_host}:#{@agent.destination_port} (#{@agent.tls ? 'TCP/TLS' : 'UDP'})."
         daemon.startup
       end
     rescue Servolux::Daemon::StartupError => e
@@ -235,6 +238,14 @@ module RemoteSyslog
       end
     rescue Interrupt
       exit(0)
+    end
+
+    def error(message, try_help = false)
+      puts "#{program_name}: #{message}"
+      if try_help
+        puts "Try `#{program_name} --help' for more information."
+      end
+      exit(1)
     end
   end
 end
