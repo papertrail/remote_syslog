@@ -39,7 +39,10 @@ module RemoteSyslog
       @glob_check_interval = 60
       @eventmachine_tail = options.fetch(:eventmachine_tail, true)
 
-      logger = options[:logger] || Logger.new(STDERR)
+      unless logger = options[:logger]
+        logger = Logger.new(STDERR)
+        logger.level = Logger::ERROR
+      end
 
       super('remote_syslog', :logger => logger, :pid_file => options[:pid_file])
     end

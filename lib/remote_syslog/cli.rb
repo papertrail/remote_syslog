@@ -181,6 +181,12 @@ module RemoteSyslog
       end
 
       @agent.pid_file ||= default_pid_file
+
+      if !@no_detach && !::Servolux.fork?
+        @no_detach = true
+
+        puts "Fork is not supported in this Ruby environment. Running in foreground."
+      end
     rescue OptionParser::ParseError => e
       error e.message, true
     end
@@ -232,9 +238,9 @@ module RemoteSyslog
     rescue Servolux::Daemon::StartupError => e
       case message = e.message[/^(Child raised error: )?(.*)$/, 2]
       when /#<Errno::EACCES: (.*)>$/
-        puts "Error: #{$1}"
+        error $1
       else
-        puts "Error: #{message}"
+        error message
       end
     rescue Interrupt
       exit(0)

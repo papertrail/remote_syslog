@@ -29,7 +29,9 @@ module RemoteSyslog
 
     def run
       File::Tail::Logfile.tail(@path) do |line|
-        @callback.call(@tag, line)
+        EventMachine.schedule do
+          @callback.call(@tag, line)
+        end
       end
     end
   end
