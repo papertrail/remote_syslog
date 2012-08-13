@@ -33,6 +33,8 @@ module RemoteSyslog
           @callback.call(@tag, line)
         end
       end
+    rescue => e
+      @logger.error "Unhandled FileTailReader Exception: #{e.class}: #{e.message}:\n\t#{e.backtrace.join("\n\t")}"
     end
   end
 end

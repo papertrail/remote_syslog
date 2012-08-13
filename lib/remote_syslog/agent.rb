@@ -47,6 +47,22 @@ module RemoteSyslog
       super('remote_syslog', :logger => logger, :pid_file => options[:pid_file])
     end
 
+    def log_file=(file)
+      @log_file = File.expand_path(file)
+
+      level = self.logger.level
+      self.logger = Logger.new(file)
+      self.logger.level = level
+    end
+
+    def redirect_io!
+      if @log_file
+        STDOUT.reopen(@log_file, 'a')
+        STDERR.reopen(@log_file, 'a')
+        STDERR.sync = STDOUT.sync = true
+      end
+    end
+
     def files=(files)
       @files = [ @files, files ].flatten.compact.uniq
     end
