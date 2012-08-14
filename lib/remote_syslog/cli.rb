@@ -273,7 +273,7 @@ module RemoteSyslog
       result = rio.read
       _, status = Process.wait2(pid)
 
-      @agent.logger.debug "Results from eventmachine_supports_tls: #{status.exitstatus}: #{result}"
+      @agent.logger.debug "Results from eventmachine_supports_tls: #{status}: #{result}"
 
       if status.exitstatus == 0
         return true
