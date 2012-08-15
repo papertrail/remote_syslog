@@ -84,7 +84,8 @@ to `a.server.com:514`:
 
 ### Windows
 
-To run in Windows, start in a DOS Prompt or batch file and do not daemonize:
+To run in Windows, start in a DOS Prompt or batch file (does not automatically
+run in the background):
 
     C:\> remote_syslog -D
 
