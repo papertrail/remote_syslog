@@ -1,7 +1,4 @@
 module RemoteSyslog
- VERSION = "1.6.5"
+ VERSION = "1.6.6.rc1"
 end
 
-require 'remote_syslog/reader'
-require 'remote_syslog/tls_endpoint'
-require 'remote_syslog/udp_endpoint'

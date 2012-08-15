@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   ## If your rubyforge_project name is different, then edit it and comment out
   ## the sub! line in the Rakefile
   s.name              = 'remote_syslog'
-  s.version           = '1.6.5'
-  s.date              = '2012-05-10'
+  s.version           = '1.6.6.rc1'
+  s.date              = '2012-08-13'
   s.rubyforge_project = 'remote_syslog'
 
   ## Make sure your summary is short. The description may be as long
@@ -40,7 +40,8 @@ Gem::Specification.new do |s|
   ## List your runtime dependencies here. Runtime dependencies are those
   ## that are needed for an end user to actually USE your code.
   #s.add_dependency('DEPNAME', [">= 1.1.0", "< 2.0.0"])
-  s.add_dependency 'daemons'
+  s.add_dependency 'servolux'
+  s.add_dependency 'file-tail'
   s.add_dependency 'eventmachine', [ '>= 0.12.10', '< 1.1' ]
   s.add_dependency 'eventmachine-tail'
   s.add_dependency 'syslog_protocol', [ '~> 0.9.2' ]
@@ -67,8 +68,12 @@ Gem::Specification.new do |s|
     examples/remote_syslog.supervisor.conf
     examples/remote_syslog.upstart.conf
     lib/remote_syslog.rb
+    lib/remote_syslog/agent.rb
     lib/remote_syslog/cli.rb
-    lib/remote_syslog/reader.rb
+    lib/remote_syslog/eventmachine_reader.rb
+    lib/remote_syslog/file_tail_reader.rb
+    lib/remote_syslog/glob_watch.rb
+    lib/remote_syslog/message_generator.rb
     lib/remote_syslog/tls_endpoint.rb
     lib/remote_syslog/udp_endpoint.rb
     remote_syslog.gemspec
