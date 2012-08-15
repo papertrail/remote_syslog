@@ -3,8 +3,4 @@
 require 'remote_syslog'
 require 'remote_syslog/cli'
 
-EM.error_handler { |e|
-  puts "Unhandled Exception: #{e.class}: #{e.message}:\n\t#{e.backtrace.join("\n\t")}"
-}
-
 RemoteSyslog::Cli.process!(ARGV)

@@ -1,9 +1,14 @@
+require 'eventmachine'
+
 module RemoteSyslog
   class UdpEndpoint
-    def initialize(address, port)
+    attr_reader :logger
+
+    def initialize(address, port, options = {})
       @address = address
       @port    = port.to_i
       @socket  = EventMachine.open_datagram_socket('0.0.0.0', 0)
+      @logger  = options[:logger] || Logger.new(STDERR)
 
       # Try to resolve the address
       resolve_address
