@@ -222,7 +222,7 @@ module RemoteSyslog
     def run
       Thread.abort_on_exception = true
 
-      if @agent.tls && !eventmachine_supports_tls?
+      if @agent.tls && !EventMachine.ssl?
         error "TLS is not supported by eventmachine installed on this system.\nThe openssl-devel/openssl-dev package must be installed before installing eventmachine."
       end
 
@@ -252,37 +252,6 @@ module RemoteSyslog
 
     def redirect_io
       @agent.redirect_io!
-    end
-
-    # This is a terrible hack due to the fact that eventmachine does not
-    # provide a way to detect if it has been compiled with TLS support
-    # and throws a C++ std::runtime_error if TLS is not available that we
-    # are unable to catch from ruby
-    def eventmachine_supports_tls?
-      rio, wio, = IO.pipe
-
-      pid = fork do
-        rio.close
-        STDOUT.reopen wio
-        STDERR.reopen wio
-        STDOUT.sync = STDERR.sync = true
-        EM.run_block { EventMachine.connect('0.0.0.0', 1) { |c| c.start_tls } }
-      end
-
-      wio.close
-      result = rio.read
-      _, status = Process.wait2(pid)
-
-      @agent.logger.debug "Results from eventmachine_supports_tls: #{status}: #{result}"
-
-      if status.exitstatus == 0
-        return true
-      elsif result =~ /Encryption not available/
-        return false
-      else
-        # We'll assume we can work if the problem wasn't related to encryption
-        return true
-      end
     end
 
 
