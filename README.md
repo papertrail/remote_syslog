@@ -33,10 +33,7 @@ specified as command-line arguments (below).
 
 ## Usage
 
-    $ remote_syslog -h
-    Usage: remote_syslog [options] [<logfile>...]
-
-    Example: remote_syslog -c configs/logs.yml -p 12345 /var/log/mysqld.log
+    Usage: remote_syslog [OPTION]... <FILE>...
 
     Options:
         -c, --configfile PATH            Path to config (/etc/log_files.yml)
@@ -45,13 +42,27 @@ specified as command-line arguments (below).
         -D, --no-detach                  Don't daemonize and detach from the terminal
         -f, --facility FACILITY          Facility (user)
             --hostname HOST              Local hostname to send from
-        -P, --pid-dir DIRECTORY          Directory to write .pid file in (/var/run/)
-            --pid-file FILENAME          PID filename (<program name>.pid)
+        -P, --pid-dir DIRECTORY          DEPRECATED: Directory to write .pid file in
+            --pid-file FILENAME          Location of the PID file (default /Users/eric/remote_syslog.pid)
             --parse-syslog               Parse file as syslog-formatted file
         -s, --severity SEVERITY          Severity (notice)
             --strip-color                Strip color codes
             --tls                        Connect via TCP with TLS
+            --new-file-check-interval INTERVAL
+                                         Time between checks for new files
+
+    Advanced options:
+            --[no-]eventmachine-tail     Enable or disable using eventmachine-tail
+            --debug-log FILE             Log internal debug messages
+            --debug-level LEVEL          Log internal debug messages at level
+
+    Common options:
         -h, --help                       Show this message
+            --version                    Show version
+
+    Example:
+        $ remote_syslog -c configs/logs.yml -p 12345 /var/log/mysqld.log
+
 
 
 ## Example
