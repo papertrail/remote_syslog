@@ -172,7 +172,7 @@ module RemoteSyslog
 
       if @pid_directory
         if @agent.pid_file
-          @agent.pid_file = File.expand_path("#{@pid_directory}/#{@agent.pid_file}")
+          @agent.pid_file = File.expand_path("#{@pid_directory}/#{File.basename(@agent.pid_file)}")
         else
           @agent.pid_file = File.expand_path("#{@pid_directory}/remote_syslog.pid")
         end
