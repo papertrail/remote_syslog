@@ -217,6 +217,14 @@ module RemoteSyslog
       if config['exclude_patterns']
         @agent.exclude_pattern = Regexp.new(config['exclude_patterns'].map { |r| "(#{r})" }.join('|'))
       end
+
+      if config['exclude_files']
+        @agent.exclude_file_pattern = Regexp.new(config['exclude_files'].map { |r| "(#{r})" }.join('|'))
+      end
+
+      if config['new_file_check_interval']
+        @agent.glob_check_interval = config['new_file_check_interval']
+      end
     end
 
     def run
