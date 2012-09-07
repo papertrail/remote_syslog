@@ -23,7 +23,7 @@ module RemoteSyslog
     attr_accessor :facility, :severity, :hostname
 
     # Other settings
-    attr_accessor :strip_color, :parse_fields
+    attr_accessor :strip_color, :parse_fields, :log_prefix
 
     # Exclude messages matching pattern
     attr_accessor :exclude_pattern
@@ -109,7 +109,7 @@ module RemoteSyslog
           :facility => @facility, :severity => @severity, 
           :strip_color => @strip_color, :hostname => @hostname, 
           :parse_fields => @parse_fields, :exclude_pattern => @exclude_pattern,
-          :max_message_size => max_message_size)
+          :log_prefix => @log_prefix, :max_message_size => max_message_size)
 
         files.each do |file|
           RemoteSyslog::GlobWatch.new(file, @glob_check_interval, 
