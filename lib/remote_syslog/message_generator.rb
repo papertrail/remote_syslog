@@ -11,6 +11,7 @@ module RemoteSyslog
       @parse_fields     = options[:parse_fields]
       @strip_color      = options[:strip_color]
       @exclude_pattern  = options[:exclude_pattern]
+      @log_prefix       = options[:log_prefix]
       @max_message_size = options[:max_message_size] || 1024
 
       @packet = SyslogProtocol::Packet.new
@@ -34,6 +35,7 @@ module RemoteSyslog
       return if @exclude_pattern && message =~ @exclude_pattern
 
       message = message.gsub(COLORED_REGEXP, '') if @strip_color
+      message = @log_prefix + message if @log_prefix
 
       packet = @packet.dup
       packet.content = message
