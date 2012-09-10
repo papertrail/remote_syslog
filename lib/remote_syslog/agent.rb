@@ -23,10 +23,16 @@ module RemoteSyslog
     attr_accessor :facility, :severity, :hostname
 
     # Other settings
-    attr_accessor :strip_color, :parse_fields, :exclude_pattern
+    attr_accessor :strip_color, :parse_fields
 
-    # Files
+    # Exclude messages matching pattern
+    attr_accessor :exclude_pattern
+
+    # Files (can be globs)
     attr_reader :files
+
+    # Exclude files matching pattern
+    attr_accessor :exclude_file_pattern
 
     # How often should we check for new files?
     attr_accessor :glob_check_interval
@@ -107,7 +113,7 @@ module RemoteSyslog
 
         files.each do |file|
           RemoteSyslog::GlobWatch.new(file, @glob_check_interval, 
-            method(:watch_file))
+            @exclude_file_pattern, method(:watch_file))
         end
       end
     end

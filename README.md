@@ -174,6 +174,17 @@ than the current set of matches). This is not necessary for globs defined in
 the config file.
 
 
+### Excluding files from being sent
+
+Provide one or more regular expressions to prevent certain files from being
+matched.
+
+    exclude_files:
+	  - \.\d$
+	  - .bz2
+	  - .gz
+
+
 ### Multiple instances
 
 Run multiple instances to support more than one message-specific file format
