@@ -1,4 +1,4 @@
 module RemoteSyslog
- VERSION = "1.6.6.1"
+ VERSION = "1.6.7"
 end
 
