@@ -43,7 +43,7 @@ specified as command-line arguments (below).
         -f, --facility FACILITY          Facility (user)
             --hostname HOST              Local hostname to send from
         -P, --pid-dir DIRECTORY          DEPRECATED: Directory to write .pid file in
-            --pid-file FILENAME          Location of the PID file (default /Users/eric/remote_syslog.pid)
+            --pid-file FILENAME          Location of the PID file (default /var/run/remote_syslog.pid)
             --parse-syslog               Parse file as syslog-formatted file
         -s, --severity SEVERITY          Severity (notice)
             --strip-color                Strip color codes

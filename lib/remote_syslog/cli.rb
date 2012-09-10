@@ -178,6 +178,17 @@ module RemoteSyslog
         end
       end
 
+      # We're dealing with an old-style pid_file
+      if @agent.pid_file && File.basename(@agent.pid_file) == @agent.pid_file
+        default_pid_dir = File.dirname(default_pid_file)
+
+        @agent.pid_file = File.join(default_pid_dir, @agent.pid_file)
+
+        if File.extname(@agent.pid_file) == ''
+          @agent.pid_file << '.pid'
+        end
+      end
+
       @agent.pid_file ||= default_pid_file
 
       if !@no_detach && !::Servolux.fork?
