@@ -80,7 +80,10 @@ module RemoteSyslog
 
     def unbind
       @connection = nil
-      connect
+
+      EventMachine.add_timer(1) do
+        connect
+      end
     end
 
     def write(value)
