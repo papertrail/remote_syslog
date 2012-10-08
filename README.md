@@ -241,6 +241,7 @@ then the log message, use parse_fields with this regex:
 Per-file regexes are not supported. Run multiple instances with different
 config files.
 
+
 ### Excluding lines matching a pattern
 
 There may be certain log messages that you do not want to be sent.  These may
@@ -251,6 +252,21 @@ exclude_patterns with an array or regexes:
     exclude_patterns:
      - exclude this
      - \d+ things
+
+
+### Choosing app name
+
+remote_syslog uses the log file name (like "access_log") as the syslog 
+program name, or what the syslog RFCs call the "tag." This is ideal unless 
+remote_syslog watches many files that have the same name.
+
+In that case, tell remote_syslog to set another program name by creating 
+symbolic link to the generically-named file:
+
+    cd /path/to/logs
+    ln -s generic_name.log unique_name.log
+
+Point remote_syslog at unique_name.log. It will use that as the program name.
 
 
 ## Reporting bugs
