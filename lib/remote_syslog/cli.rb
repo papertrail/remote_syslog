@@ -246,7 +246,7 @@ module RemoteSyslog
       end
 
       if @no_detach
-        puts "Watching #{@agent.files.length} files/paths. Sending to #{@agent.destination_host}:#{@agent.destination_port} (#{@agent.tls ? 'TCP/TLS' : 'UDP'})."
+        puts "Watching #{@agent.files.length} files/globs. Sending to #{@agent.destination_host}:#{@agent.destination_port} (#{@agent.tls ? 'TCP/TLS' : 'UDP'})."
         @agent.run
       else
         daemon = Servolux::Daemon.new(:server => @agent, :after_fork => method(:redirect_io))
@@ -255,7 +255,7 @@ module RemoteSyslog
           error "Already running at #{@agent.pid_file}. To run another instance, specify a different `--pid-file`.", true
         end
 
-        puts "Watching #{@agent.files.length} files/paths. Sending to #{@agent.destination_host}:#{@agent.destination_port} (#{@agent.tls ? 'TCP/TLS' : 'UDP'})."
+        puts "Watching #{@agent.files.length} files/globs. Sending to #{@agent.destination_host}:#{@agent.destination_port} (#{@agent.tls ? 'TCP/TLS' : 'UDP'})."
         daemon.startup
       end
     rescue Servolux::Daemon::StartupError => e

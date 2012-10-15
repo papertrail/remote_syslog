@@ -17,7 +17,7 @@ EXTRAOPTIONS=""
 
 pid_file="$pid_dir/$prog.pid"
 
-PATH=/sbin:/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+PATH=/sbin:/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
 
 RETVAL=0
 
