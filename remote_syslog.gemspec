@@ -43,7 +43,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'servolux'
   s.add_dependency 'file-tail'
   s.add_dependency 'eventmachine', [ '>= 0.12.10', '< 1.1' ]
-  s.add_dependency 'eventmachine-tail'
+  s.add_dependency 'eventmachine-tail', [ '>= 0.6.4' ]
   s.add_dependency 'syslog_protocol', [ '~> 0.9.2' ]
   s.add_dependency 'em-resolv-replace'
 
