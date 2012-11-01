@@ -78,9 +78,9 @@ well as the file `/var/log/mysqld.log`. Send to port `logs.papertrailapp.com:123
 
 Stay attached to the terminal, look for and use `/etc/log_files.yml` if it
 exists, write PID to `/tmp/remote_syslog.pid`, and send with facility local0
-to `a.server.com:514`:
+to `a.example.com:514`:
 
-    $ remote_syslog -D -d a.server.com -f local0 -P /tmp /var/log/mysqld.log
+    $ remote_syslog -D -d a.example.com -f local0 --pid-file /tmp/remote_syslog.pid /var/log/mysqld.log
 
 ### Windows
 
@@ -190,10 +190,10 @@ matched.
 Run multiple instances to support more than one message-specific file format
 or to specify unique syslog hostnames.
 
-To do that, provide an alternate PID filename as a command-line option
-to the additional instance(s). For example:
+To do that, provide an alternate PID path as a command-line option to the 
+additional instance(s). For example:
 
-    --pid-file remote_syslog_2.pid
+    --pid-file /var/run/remote_syslog_2.pid
 
 
 ### Parse fields from log messages
