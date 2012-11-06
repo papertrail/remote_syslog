@@ -101,6 +101,9 @@ module RemoteSyslog
         opts.on("--strip-color", "Strip color codes") do
           @agent.strip_color = true
         end
+        opts.on("--tcp", "Connect via TCP (no TLS)") do
+          @agent.tcp = true
+        end
         opts.on("--tls", "Connect via TCP with TLS") do
           @agent.tls = true
         end
@@ -246,7 +249,7 @@ module RemoteSyslog
       end
 
       if @no_detach
-        puts "Watching #{@agent.files.length} files/globs. Sending to #{@agent.destination_host}:#{@agent.destination_port} (#{@agent.tls ? 'TCP/TLS' : 'UDP'})."
+        puts "Watching #{@agent.files.length} files/globs. Sending to #{@agent.destination_host}:#{@agent.destination_port} (#{@agent.endpoint_mode})."
         @agent.run
       else
         daemon = Servolux::Daemon.new(:server => @agent, :after_fork => method(:redirect_io))
@@ -255,7 +258,7 @@ module RemoteSyslog
           error "Already running at #{@agent.pid_file}. To run another instance, specify a different `--pid-file`.", true
         end
 
-        puts "Watching #{@agent.files.length} files/globs. Sending to #{@agent.destination_host}:#{@agent.destination_port} (#{@agent.tls ? 'TCP/TLS' : 'UDP'})."
+        puts "Watching #{@agent.files.length} files/globs. Sending to #{@agent.destination_host}:#{@agent.destination_port} (#{@agent.endpoint_mode})."
         daemon.startup
       end
     rescue Servolux::Daemon::StartupError => e

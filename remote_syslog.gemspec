@@ -76,6 +76,7 @@ Gem::Specification.new do |s|
     lib/remote_syslog/message_generator.rb
     lib/remote_syslog/tls_endpoint.rb
     lib/remote_syslog/udp_endpoint.rb
+    lib/remote_syslog/tcp_endpoint.rb
     remote_syslog.gemspec
   ]
   # = MANIFEST =

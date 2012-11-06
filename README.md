@@ -48,6 +48,7 @@ specified as command-line arguments (below).
         -s, --severity SEVERITY          Severity (notice)
             --strip-color                Strip color codes
             --tls                        Connect via TCP with TLS
+            --tcp                        Connect via TCP (no TLS)
             --new-file-check-interval INTERVAL
                                          Time between checks for new files
 
