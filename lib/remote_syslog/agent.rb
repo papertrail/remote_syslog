@@ -13,6 +13,9 @@ module RemoteSyslog
     # Who should we connect to?
     attr_accessor :destination_host, :destination_port
 
+    # Should use TCP?
+    attr_accessor :tcp
+
     # Should use TLS?
     attr_accessor :tls
 
@@ -92,6 +95,11 @@ module RemoteSyslog
         end
 
         if @tls
+          max_message_size = 20480
+
+          connection = TcpEndpoint.new(@destination_host, @destination_port,
+            :logger => logger)
+        elsif @tcp
           max_message_size = 10240
 
           connection = TlsEndpoint.new(@destination_host, @destination_port,
@@ -115,6 +123,16 @@ module RemoteSyslog
           RemoteSyslog::GlobWatch.new(file, @glob_check_interval, 
             @exclude_file_pattern, method(:watch_file))
         end
+      end
+    end
+
+    def endpoint_mode
+      @endpoint_mode ||= if @tls
+        'TCP/TLS'
+      elsif @tcp
+        'TCP'
+      else
+        'UDP'
       end
     end
 
