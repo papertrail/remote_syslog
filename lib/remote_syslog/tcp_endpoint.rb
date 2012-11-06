@@ -3,6 +3,20 @@ require 'eventmachine'
 module RemoteSyslog
   # Additional class that uses TCP but no TLS.  Has the benefit of a greater max packet size
   class TcpEndpoint
+    class Handler < EventMachine::Connection
+      def initialize(endpoint)
+        @endpoint = endpoint
+        super()
+      end
+
+      def connection_completed
+        @endpoint.connection = self
+      end
+
+      def unbind
+        @endpoint.unbind
+      end
+    end
 
     attr_accessor :connection
 
@@ -44,7 +58,7 @@ module RemoteSyslog
 
     def connect
       logger.debug "Connecting to #{address}:#{@port}"
-      self.connection = EventMachine.connect(address, @port)
+      EventMachine.connect(address, @port, TcpEndpoint::Handler, self)
     end
 
     def unbind
