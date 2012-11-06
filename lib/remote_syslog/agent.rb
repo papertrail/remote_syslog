@@ -7,6 +7,7 @@ require 'remote_syslog/glob_watch'
 require 'remote_syslog/message_generator'
 require 'remote_syslog/udp_endpoint'
 require 'remote_syslog/tls_endpoint'
+require 'remote_syslog/tcp_endpoint'
 
 module RemoteSyslog
   class Agent < Servolux::Server
@@ -95,17 +96,17 @@ module RemoteSyslog
         end
 
         if @tls
-          max_message_size = 20480
-
-          connection = TcpEndpoint.new(@destination_host, @destination_port,
-            :logger => logger)
-        elsif @tcp
           max_message_size = 10240
 
           connection = TlsEndpoint.new(@destination_host, @destination_port,
             :client_cert_chain => @client_cert_chain,
             :client_private_key => @client_private_key,
             :server_cert => @server_cert,
+            :logger => logger)
+        elsif @tcp
+          max_message_size = 20480
+
+          connection = TcpEndpoint.new(@destination_host, @destination_port,
             :logger => logger)
         else
           max_message_size = 1024
