@@ -7,11 +7,15 @@ require 'remote_syslog/glob_watch'
 require 'remote_syslog/message_generator'
 require 'remote_syslog/udp_endpoint'
 require 'remote_syslog/tls_endpoint'
+require 'remote_syslog/tcp_endpoint'
 
 module RemoteSyslog
   class Agent < Servolux::Server
     # Who should we connect to?
     attr_accessor :destination_host, :destination_port
+
+    # Should use TCP?
+    attr_accessor :tcp
 
     # Should use TLS?
     attr_accessor :tls
@@ -99,6 +103,11 @@ module RemoteSyslog
             :client_private_key => @client_private_key,
             :server_cert => @server_cert,
             :logger => logger)
+        elsif @tcp
+          max_message_size = 20480
+
+          connection = TcpEndpoint.new(@destination_host, @destination_port,
+            :logger => logger)
         else
           max_message_size = 1024
           connection = UdpEndpoint.new(@destination_host, @destination_port,
@@ -115,6 +124,16 @@ module RemoteSyslog
           RemoteSyslog::GlobWatch.new(file, @glob_check_interval, 
             @exclude_file_pattern, method(:watch_file))
         end
+      end
+    end
+
+    def endpoint_mode
+      @endpoint_mode ||= if @tls
+        'TCP/TLS'
+      elsif @tcp
+        'TCP'
+      else
+        'UDP'
       end
     end
 
