@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   ## If your rubyforge_project name is different, then edit it and comment out
   ## the sub! line in the Rakefile
   s.name              = 'remote_syslog'
-  s.version           = '1.6.8'
-  s.date              = '2012-10-23'
+  s.version           = '1.6.9'
+  s.date              = '2012-11-08'
   s.rubyforge_project = 'remote_syslog'
 
   ## Make sure your summary is short. The description may be as long
@@ -74,9 +74,9 @@ Gem::Specification.new do |s|
     lib/remote_syslog/file_tail_reader.rb
     lib/remote_syslog/glob_watch.rb
     lib/remote_syslog/message_generator.rb
+    lib/remote_syslog/tcp_endpoint.rb
     lib/remote_syslog/tls_endpoint.rb
     lib/remote_syslog/udp_endpoint.rb
-    lib/remote_syslog/tcp_endpoint.rb
     remote_syslog.gemspec
   ]
   # = MANIFEST =
