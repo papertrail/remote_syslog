@@ -252,13 +252,19 @@ exclude_patterns with an array or regexes:
      - exclude this
      - \d+ things
 
-### Prefixing log lines with a fixed string
+### Prepending a string to log messages
 
-Some log management services route log messages based on the presence of a
-UUID in the log message. Use log_prefix to prepend such a string to every log
-message before sending.
+Use `prepend` to prepend a string to every log message before
+transmitting.  The string is prepended to the log message body, as if it
+occurred at the start of every log file line.
 
-    log_prefix: cafebabe-1024-4096-badd-1234abcd1234
+Examples:
+
+    prepend: important: 
+
+or:
+
+    prepend: cafebabe-1024-4096-badd-1234abcd1234
 
 ## Reporting bugs
 
