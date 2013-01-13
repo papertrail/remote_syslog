@@ -239,6 +239,10 @@ module RemoteSyslog
       if config['new_file_check_interval']
         @agent.glob_check_interval = config['new_file_check_interval']
       end
+
+      if config['log_prefix']
+        @agent.log_prefix = config['log_prefix']
+      end
     end
 
     def run
