@@ -254,6 +254,19 @@ exclude_patterns with an array or regexes:
      - exclude this
      - \d+ things
 
+### Prepending a string to log messages
+
+Use `prepend` to prepend a string to every log message before
+transmitting.  The string is prepended to the log message body, as if it
+occurred at the start of every log file line.
+
+Examples:
+
+    prepend: important: 
+
+or:
+
+    prepend: cafebabe-1024-4096-badd-1234abcd1234
 
 ### Choosing app name
 
