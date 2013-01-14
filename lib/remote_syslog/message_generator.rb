@@ -35,7 +35,7 @@ module RemoteSyslog
       return if @exclude_pattern && message =~ @exclude_pattern
 
       message = message.gsub(COLORED_REGEXP, '') if @strip_color
-      message = [@prepend, message].join(' ') if @prepend
+      message = @prepend + message if @prepend
 
       packet = @packet.dup
       packet.content = message

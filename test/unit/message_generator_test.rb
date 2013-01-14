@@ -7,7 +7,7 @@ class MessageGeneratorTest < Test::Unit::TestCase
     def socket.write(packet)
       self << packet
     end
-    generator = RemoteSyslog::MessageGenerator.new(socket, {:prepend => 'crazy_prefix'})
+    generator = RemoteSyslog::MessageGenerator.new(socket, {:prepend => 'crazy_prefix '})
     generator.transmit("tag", "message")
     assert_match /crazy_prefix /, socket[0]
   end

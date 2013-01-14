@@ -5,9 +5,9 @@ files:
   - /opt/misc/*.log
   - /var/log/mysqld.log
   - /var/run/mysqld/mysqld-slow.log
-hostname: www42   # override OS hostname
+hostname: www42  # override OS hostname
 parse_fields: syslog   # predefined regex name or double-quoted regex
-prepend: 0xDEADBEEF   # prepend this before every log message
+prepend: '0xDEADBEEF: '  # prepend this before every log message
 exclude_patterns:
   - exclude this
   - \d+ things
