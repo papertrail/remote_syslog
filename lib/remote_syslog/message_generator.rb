@@ -42,11 +42,11 @@ module RemoteSyslog
 
       if @parse_fields && message =~ @parse_fields
         packet.hostname = $2 if $2 && $2 != ''
-        packet.tag      = $3 if $3 && $3 != ''
+        tag             = $3 if $3 && $3 != ''
         packet.content  = $4 if $4 && $4 != ''
 
-        if packet.tag
-          packet.tag.gsub!(%r{[: \]\[\\]+}, '-')
+        if tag
+          packet.tag = tag.gsub(%r{[: \]\[\\]+}, '-')
         end
       end
 
