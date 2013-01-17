@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   ## If your rubyforge_project name is different, then edit it and comment out
   ## the sub! line in the Rakefile
   s.name              = 'remote_syslog'
-  s.version           = '1.6.12'
+  s.version           = '1.6.13'
   s.date              = '2013-01-17'
   s.rubyforge_project = 'remote_syslog'
 
