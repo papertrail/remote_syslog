@@ -13,4 +13,4 @@ exclude_patterns:
   - \d+ things
 destination:
   host: logs.papertrailapp.com
-  port: 12345   # optional, defaults to 514
+  port: 12345   # Papertrail dest port (default: 514)¬
