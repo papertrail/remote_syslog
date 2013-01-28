@@ -184,9 +184,10 @@ and replace it with a new one (at a new inode). With the Linux standard
 copies, and truncate the original so that the inode remains the same.
 
 This comes closest to ensuring that other programs watching these files
-will not be affected by, or need to be notified of, the rotation. We
-recommend this option whether or not you use `remote_syslog`; in most
-cases, the only tradeoff is slightly higher disk usage during rotation.
+will not be affected by, or need to be notified of, the rotation. In
+most cases, the only tradeoff of `copytruncate` is slightly higher disk
+usage during rotation. We recommend this option whether or not you use
+`remote_syslog`. 
 
 
 ### Excluding files from being sent
