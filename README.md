@@ -299,6 +299,24 @@ symbolic link to the generically-named file:
 Point remote_syslog at unique_name.log. It will use that as the program name.
 
 
+## Troubleshooting
+
+Two commands are particularly useful for observing `remote_syslog`
+behavior.  First, its own debugging:
+
+    remote_syslog --debug-level DEBUG --debug-log remote_syslog.log
+
+This will write internal operations to the file `remote_syslog.log`.
+
+Second, strace or ktrace shows the interaction between `remote_syslog`
+and the OS. To run `strace` against an existing `remote_syslog` instance
+(process ID 12345):
+
+     strace -fp 12345 -s 500
+
+Feel free to ask questions or report bugs.
+
+
 ## Reporting bugs
 
 1. See whether the issue has already been reported: <https://github.com/papertrail/remote_syslog/issues/>
