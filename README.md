@@ -92,10 +92,13 @@ run in the background):
 
 ## Auto-starting at boot
 
-The gem includes sample [init files] such as [remote_syslog.init.d]. remote_syslog will 
-daemonize by default. You may be able to:
+The gem includes sample [init files]. You may be able to:
 
     $ cp examples/remote_syslog.init.d /etc/init.d/remote_syslog
+
+remote_syslog will daemonize by default.
+
+Init files: [init.d], [launchd], [supervisor], [upstart]
 
 ## Sending messages securely ##
 
@@ -336,7 +339,10 @@ Once you've made your great commits:
 
 [sample config]: https://github.com/papertrail/remote_syslog/blob/master/examples/log_files.yml.example
 [init files]: https://github.com/papertrail/remote_syslog/blob/master/examples/
-[remote_syslog.init.d]: https://github.com/papertrail/remote_syslog/blob/master/examples/remote_syslog.init.d
+[init.d]: https://github.com/papertrail/remote_syslog/blob/master/examples/remote_syslog.init.d
+[launchd]: https://github.com/papertrail/remote_syslog/blob/master/examples/com.papertrailapp.remote_syslog.plist
+[supervisor]: https://github.com/papertrail/remote_syslog/blob/master/examples/remote_syslog.supervisor.conf
+[upstart]: https://github.com/papertrail/remote_syslog/blob/master/examples/remote_syslog.upstart.conf
 [advanced config]: https://github.com/papertrail/remote_syslog/blob/master/examples/log_files.yml.example.advanced
 [fk]: http://help.github.com/forking/
 [is]: https://github.com/papertrail/remote_syslog/issues/
