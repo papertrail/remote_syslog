@@ -181,16 +181,16 @@ the config file.
 ### Log rotation
 
 External log rotation scripts often move or remove an existing log file
-and replace it with a new one (at a new inode). With the Linux standard
-[logrotate](http://iain.cx/src/logrotate/) script, use the
-`copytruncate` config option.  Logrotate will copy files, operate on the
-copies, and truncate the original so that the inode remains the same.
+and replace it with a new one (at a new inode). The Linux standard script
+[logrotate](http://iain.cx/src/logrotate/) supports a `copytruncate` config 
+option.  With that option, `logrotate` will copy files, operate on the copies, 
+and truncate the original so that the inode remains the same.
 
-This comes closest to ensuring that other programs watching these files
-will not be affected by, or need to be notified of, the rotation. In
-most cases, the only tradeoff of `copytruncate` is slightly higher disk
-usage during rotation. We recommend this option whether or not you use
-`remote_syslog`. 
+This comes closest to ensuring that programs watching these files (including 
+`remote_syslog`) will not be affected by, or need to be notified of, the 
+rotation. The only tradeoff of `copytruncate` is slightly higher disk usage 
+during rotation, so we recommend this option whether or not you use 
+`remote_syslog`.
 
 
 ### Excluding files from being sent
