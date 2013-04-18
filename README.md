@@ -135,6 +135,12 @@ remote_syslog sends the name of the file without a path ("mysqld.log") as
 the syslog tag (program name). RFCs 3164 and 5424 limit the tag to 32
 characters. Longer filenames are truncated to 32 characters.
 
+After changing the configuration file, restart `remote_syslog` using the 
+init script or by manually killing and restarting the process. For example:
+
+    /etc/init.d/remote_syslog restart
+
+
 ## Advanced Configuration (Optional)
 
 Here's an [advanced config] which uses all options.
