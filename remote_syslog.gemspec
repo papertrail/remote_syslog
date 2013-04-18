@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   ## the sub! line in the Rakefile
   s.name              = 'remote_syslog'
   s.version           = '1.6.13'
-  s.date              = '2013-01-17'
+  s.date              = '2013-04-18'
   s.rubyforge_project = 'remote_syslog'
 
   ## Make sure your summary is short. The description may be as long
