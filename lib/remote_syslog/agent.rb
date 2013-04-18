@@ -46,7 +46,7 @@ module RemoteSyslog
 
     def initialize(options = {})
       @files = []
-      @glob_check_interval = 60
+      @glob_check_interval = 10
       @eventmachine_tail = options.fetch(:eventmachine_tail, true)
 
       unless logger = options[:logger]
