@@ -51,9 +51,7 @@ module RemoteSyslog
     def is_file_writable?(file)
       directory = File.dirname(file)
 
-      if (File.directory?(directory) && File.writable?(directory) && !File.exists?(file)) || File.writable?(file)
-        return file
-      end
+      (File.directory?(directory) && File.writable?(directory) && !File.exists?(file)) || File.writable?(file)
     end
 
     def default_pid_file
