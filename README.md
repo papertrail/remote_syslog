@@ -85,10 +85,7 @@ to `a.example.com:514`:
 
 ### Windows
 
-To run in Windows, start in a DOS Prompt or batch file (does not automatically
-run in the background):
-
-    C:\> remote_syslog -D
+Windows is not currently supported, though in certain situations it may work.
 
 ## Auto-starting at boot
 
