@@ -89,13 +89,18 @@ Windows is not currently supported, though in certain situations it may work.
 
 ## Auto-starting at boot
 
-The gem includes sample [init files]. You may be able to:
+The gem includes sample init files, also [available here]. You may be able to:
 
     $ cp examples/remote_syslog.init.d /etc/init.d/remote_syslog
+    $ chmod 755 /etc/init.d/remote_syslog
+
+And then ensure it's started at boot, such as with:
+
+    $ sudo update-rc.d remote_syslog defaults
 
 remote_syslog will daemonize by default.
 
-Init files: [init.d], [launchd], [supervisor], [upstart]
+Init files: [remote_syslog.init.d] (init.d), OS X [launchd], [supervisor], Ubuntu [upstart]
 
 ## Sending messages securely ##
 
@@ -346,7 +351,7 @@ Once you've made your great commits:
 
 [sample config]: https://github.com/papertrail/remote_syslog/blob/master/examples/log_files.yml.example
 [init files]: https://github.com/papertrail/remote_syslog/blob/master/examples/
-[init.d]: https://github.com/papertrail/remote_syslog/blob/master/examples/remote_syslog.init.d
+[remote_syslog.init.d]: https://github.com/papertrail/remote_syslog/blob/master/examples/remote_syslog.init.d
 [launchd]: https://github.com/papertrail/remote_syslog/blob/master/examples/com.papertrailapp.remote_syslog.plist
 [supervisor]: https://github.com/papertrail/remote_syslog/blob/master/examples/remote_syslog.supervisor.conf
 [upstart]: https://github.com/papertrail/remote_syslog/blob/master/examples/remote_syslog.upstart.conf
