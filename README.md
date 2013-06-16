@@ -94,9 +94,13 @@ The gem includes sample init files, also [available here]. You may be able to:
     $ cp examples/remote_syslog.init.d /etc/init.d/remote_syslog
     $ chmod 755 /etc/init.d/remote_syslog
 
-And then ensure it's started at boot, such as with:
+And then ensure it's started at boot, either by using:
 
     $ sudo update-rc.d remote_syslog defaults
+	
+or by creating the link manually:
+
+	$ sudo ln -s /etc/init.d/remote_syslog /etc/rc3.d/S30remote_syslog
 
 remote_syslog will daemonize by default.
 
