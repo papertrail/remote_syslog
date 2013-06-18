@@ -98,9 +98,9 @@ And then ensure it's started at boot, either by using:
 
     $ sudo update-rc.d remote_syslog defaults
 	
-or by creating the link manually:
+or by creating a link manually:
 
-	$ sudo ln -s /etc/init.d/remote_syslog /etc/rc3.d/S30remote_syslog
+    $ sudo ln -s /etc/init.d/remote_syslog /etc/rc3.d/S30remote_syslog
 
 remote_syslog will daemonize by default.
 
