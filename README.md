@@ -104,7 +104,7 @@ or by creating a link manually:
 
 remote_syslog will daemonize by default.
 
-Init files: [remote_syslog.init.d], OS X [launchd], [supervisor], Ubuntu [upstart]
+Init files: [remote_syslog.init.d][] (init.d), OS X [launchd], [supervisor], Ubuntu [upstart]
 
 ## Sending messages securely ##
 
