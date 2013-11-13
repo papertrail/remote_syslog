@@ -113,6 +113,13 @@ pass the `--tls` option when running `remote_syslog`:
 
     $ remote_syslog --tls -p 1234 /var/log/mysqld.log
 
+**Important**: `remote_syslog` depends on I/O code provided by the Ruby
+VM, `eventmachine` library, and OS. There is at least one environment
+and failure case where `remote_syslog` will not reconnect when using the
+`--tls` option. Although we've never been able to reproduce this problem
+(and known occurrences are correspondingly rare), the dependency and
+problem are worth noting.
+
 ## Configuration
 
 By default, the gem looks for a configuration in /etc/log_files.yml.
