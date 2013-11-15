@@ -2,6 +2,7 @@ require 'optparse'
 require 'yaml'
 require 'pathname'
 require 'servolux'
+require 'erb'
 
 require 'remote_syslog/agent'
 
@@ -204,7 +205,7 @@ module RemoteSyslog
     end
 
     def parse_config(file)
-      config = YAML.load_file(file)
+      config = YAML.load(ERB.new(File.read(file)).result)
 
       @files += Array(config['files'])
 
