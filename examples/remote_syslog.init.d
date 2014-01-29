@@ -1,5 +1,15 @@
 #!/bin/bash
-#
+
+### BEGIN INIT INFO
+# Provides: remote_syslog
+# Required-Start: $remote_fs $syslog
+# Required-Stop: $remote_fs $syslog
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Start and Stop
+# Description: Runs remote_syslog
+### END INIT INFO
+
 #       /etc/init.d/remote_syslog
 #
 # Starts the remote_syslog daemon
