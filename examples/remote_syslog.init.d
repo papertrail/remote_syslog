@@ -23,7 +23,7 @@ prog="remote_syslog"
 config="/etc/log_files.yml"
 pid_dir="/var/run"
 
-EXTRAOPTIONS="--tls"
+EXTRAOPTIONS=""
 
 pid_file="$pid_dir/$prog.pid"
 
