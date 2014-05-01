@@ -116,9 +116,12 @@ pass the `--tls` option when running `remote_syslog`:
 **Important**: `remote_syslog` depends on I/O code provided by the Ruby
 VM, `eventmachine` library, and OS. There is at least one environment
 and failure case where `remote_syslog` will not reconnect when using the
-`--tls` option. Although we've never been able to reproduce this problem
-(and known occurrences are correspondingly rare), the dependency and
-problem are worth noting.
+`--tls` option. Although we've never been able to reproduce this problem, 
+enough Papertrail customers have run into it that we'd suggest looking at 
+alternative solutions. One of those is forwarding data to rsyslog and 
+then using its TLS capabilities to log to Papertrail. For more 
+information on that and other alternatives, please contact 
+<support@papertrailapp.com>
 
 ## Configuration
 
