@@ -1,5 +1,16 @@
 # remote_syslog Ruby daemon & sender
 
+## Consider remote_syslog2
+
+remote_syslog has been rewritten in Go as [remote_syslog2][]. As a
+standalone binary, remote_syslog2 has fewer dependencies. It also
+depends on less code between the daemon and the OS.
+
+**Consider installing [remote_syslog2][] instead of remote_syslog.**
+
+
+## Introduction
+
 Lightweight Ruby daemon to tail one or more log files and transmit UDP syslog
 messages to a remote syslog host (centralized log aggregation).
 
@@ -363,6 +374,7 @@ Once you've made your great commits:
 5. Create a Pull Request or an [Issue][is] with a link to your branch
 6. That's it!
 
+[remote_syslog2]: https://github.com/papertrail/remote_syslog2
 [sample config]: https://github.com/papertrail/remote_syslog/blob/master/examples/log_files.yml.example
 [init files]: https://github.com/papertrail/remote_syslog/blob/master/examples/
 [remote_syslog.init.d]: https://github.com/papertrail/remote_syslog/blob/master/examples/remote_syslog.init.d
