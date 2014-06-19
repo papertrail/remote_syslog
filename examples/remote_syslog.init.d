@@ -39,7 +39,7 @@ start(){
     echo -n $"Starting $prog: "
 
     unset HOME MAIL USER USERNAME
-    $prog -c $config --pid-file $pid_file $EXTRAOPTIONS
+    $prog -c $config --pid-file=$pid_file $EXTRAOPTIONS
     RETVAL=$?
     echo
     return $RETVAL
