@@ -376,6 +376,7 @@ Once you've made your great commits:
 
 [remote_syslog2]: https://github.com/papertrail/remote_syslog2
 [sample config]: https://github.com/papertrail/remote_syslog/blob/master/examples/log_files.yml.example
+[available here]: https://github.com/papertrail/remote_syslog/blob/master/examples/
 [init files]: https://github.com/papertrail/remote_syslog/blob/master/examples/
 [remote_syslog.init.d]: https://github.com/papertrail/remote_syslog/blob/master/examples/remote_syslog.init.d
 [launchd]: https://github.com/papertrail/remote_syslog/blob/master/examples/com.papertrailapp.remote_syslog.plist
