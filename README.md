@@ -358,7 +358,7 @@ Point remote_syslog at unique_name.log. It will use that as the program name.
 
 ### `gem` not found
 
-[Install Ruby](http://www.ruby-lang.org/en/downloads/), it just takes a minute. 
+Install a [Ruby distribution](https://www.ruby-lang.org/en/downloads/), which typically takes a minute.
 
 ### `g++` not found
 
@@ -366,7 +366,15 @@ Install `gcc` and `g++` so this system can compile C/C++ source. Installation
 is typically `sudo yum install gcc-c++` (RPM-based distros) or `sudo apt-get 
 install build-essential` (.deb-based distros).
 
-### Getting `Encryption not available on this event-machine` or `TLS is not supported by eventmachine installed on this system. The openssl-devel/openssl-dev package must be installed before installing eventmachine.`
+### Getting `Encryption not available...` or `TLS is not supported...`
+
+The exact error might appear as:
+
+    Encryption not available on this event-machine
+
+or
+
+    TLS is not supported by eventmachine installed on this system. The openssl-devel/openssl-dev package must be installed before installing eventmachine.
 
 Install the OpenSSL C++ package for your distribution, then reinstall the eventmachine. 
 For example:
@@ -393,7 +401,11 @@ Try these:
 * Getting errors about missing header files, like `ssl.cpp`? Try:
   * *CentOS:* `sudo yum install libstdc++-devel ruby-devel`
 
-### Getting `Package ruby1.8 is not available, but is referred to by another package.` and/or `Package rubygems is not available, but is referred to by another package.` on Ubuntu 14.04
+### Getting `Package ruby1.8 is not available...`
+
+The exact error might appear as:
+
+    Package ruby1.8 is not available, but is referred to by another package.` and/or `Package rubygems is not available, but is referred to by another package.` on Ubuntu 14.04
 
 Ubuntu 14.04 changed the name of the ruby 1.8.7 packages. Try this instead:
 
