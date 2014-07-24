@@ -117,6 +117,19 @@ remote_syslog will daemonize by default.
 
 Init files: [remote_syslog.init.d][] (init.d), OS X [launchd], [supervisor], Ubuntu [upstart]
 
+## Optional: rvm
+
+Remember that when using a Ruby version manager such as [rvm](https://rvm.io/), 
+your interactive shell and init files need the version manager environment loaded. 
+The `rvm` [init.d instructions](https://rvm.io/integration/init-d/) show how to 
+create a wrapper script for the init files to run. A typical example is:
+
+    rvm wrapper ruby-1.9.3-p392 bootup remote_syslog
+
+.. where `ruby-1.9.3-p392` is the desired Ruby from `rvm list`. `rvm` will output 
+the path to the new wrapper script which it created. Edit the init file to run the 
+new wrapper script instead of running `remote_syslog` directly.
+
 ## Sending messages securely ##
 
 If the receiving system supports sending syslog over TCP with TLS, you can
@@ -340,6 +353,94 @@ Point remote_syslog at unique_name.log. It will use that as the program name.
 
 
 ## Troubleshooting
+
+## Installation
+
+### `gem` not found
+
+Install a [Ruby distribution](https://www.ruby-lang.org/en/downloads/), which typically takes a minute.
+
+### `g++` not found
+
+Install `gcc` and `g++` so this system can compile C/C++ source. Installation 
+is typically `sudo yum install gcc-c++` (RPM-based distros) or `sudo apt-get 
+install build-essential` (.deb-based distros).
+
+### Getting `Encryption not available...` or `TLS is not supported...`
+
+The exact error might appear as:
+
+    Encryption not available on this event-machine
+
+or
+
+    TLS is not supported by eventmachine installed on this system. The openssl-devel/openssl-dev package must be installed before installing eventmachine.
+
+Install the OpenSSL C++ package for your distribution, then reinstall the eventmachine. 
+For example:
+
+  * *.deb distros like Ubuntu:* `sudo apt-get install libssl-dev`
+  * *RPM distros like Fedora* `sudo yum install openssl-devel`
+
+Then:
+
+    gem install eventmachine -f
+
+### Getting `no such file to load -- mkmf (LoadError)`?
+
+Try these:
+
+  * *Ubuntu:* determine which Ruby version is active with `ruby -v`. 
+
+  For 1.8.7: `sudo apt-get install build-essential ruby1.8 ruby1.8-dev rubygems`.
+  For 1.9.x, including 1.9.1 and 1.9.3:  `sudo apt-get install build-essential ruby1.9.1-dev`.
+  For 2.0: `sudo apt-get install build-essential ruby2.0-dev`
+
+  * *Fedora:* `sudo yum install ruby-devel`.
+
+* Getting errors about missing header files, like `ssl.cpp`? Try:
+  * *CentOS:* `sudo yum install libstdc++-devel ruby-devel`
+
+### Getting `Package ruby1.8 is not available...`
+
+The exact error might appear as:
+
+    Package ruby1.8 is not available, but is referred to by another package.` and/or `Package rubygems is not available, but is referred to by another package.` on Ubuntu 14.04
+
+Ubuntu 14.04 changed the name of the ruby 1.8.7 packages. Try this instead:
+
+    sudo apt-get install build-essential ruby-full ruby
+
+### Freezes at the compilation stage
+
+This can happen when the system is low on memory. The installation process starts up 
+the compiler, but it gets killed as soon it consumes too much memory. 
+Tailing `/var/log/syslog` or `/var/log/messages` will confirm whether or not this is 
+occurring.
+
+The solution is to temporarily stop any memory intensive tasks, install remote_syslog, 
+and then restart them.
+
+## Operations
+
+### Reconnect failures
+
+`remote_syslog` depends on I/O code provided by the Ruby VM, `eventmachine` library, 
+and OS. There is at least one environment and failure case where `remote_syslog` will 
+not reconnect when using the `--tls` option. Although we've never been able to 
+reproduce this problem (and known occurrences are correspondingly rare), the dependency 
+and problem are worth noting.
+
+### `remote_syslog` not found?
+
+It may not be in your path. Run `find / -name remote_syslog` to locate it, then run it 
+with the full path (such as `/var/lib/gems/1.8/bin/remote_syslog`).
+
+### The system rebooted and `remote_syslog` didn't start
+
+Install an [init file](https://github.com/papertrail/remote_syslog#auto-starting-at-boot).
+
+### Logs not appearing?
 
 Two commands are particularly useful for observing `remote_syslog`
 behavior.  First, its own debugging:
