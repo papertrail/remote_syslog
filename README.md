@@ -1,11 +1,12 @@
-# remote_syslog Ruby daemon & sender
+# Deprecated. Use [remote_syslog2][] instead of this repo
 
-## New? Use [remote_syslog2][] instead of remote_syslog
+### remote_syslog Ruby daemon & sender
 
 remote_syslog has been rewritten in Go as [remote_syslog2][]. As a
 standalone binary, remote_syslog2 has fewer dependencies. It also
 depends on less code between the daemon and the OS.
 
+**Use [remote_syslog2][] instead of this repo**.
 
 ## Introduction
 
