@@ -62,8 +62,10 @@ status(){
 
     if (is_running); then
       echo "found"
+      return 0
     else
       echo "not found"
+      return 1
     fi
 }
 
