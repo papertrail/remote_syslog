@@ -62,9 +62,12 @@ status(){
 
     if (is_running); then
       echo "found"
+      RETVAL=0
     else
       echo "not found"
+      RETVAL=1
     fi
+    return $RETVAL
 }
 
 reload(){
